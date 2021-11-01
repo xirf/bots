@@ -51,7 +51,7 @@ conn.on("chat-update", async (message) => {
 });
 
 const start = async () => {
-	const version = (await axios.get("https://raw.githubusercontent.com/salismazaya/whatsapp-bot/master/wa-web-version.txt")).data.split(",").map(x => parseInt(x));
+	const version = (await axios.get("https://raw.githubusercontent.com/evaasmakula/bots/master/wa-web-version.txt")).data.split(",").map(x => parseInt(x));
 	conn.version = version;
 	if (fs.existsSync("login.json")) conn.loadAuthInfo("login.json");
 	conn.connect()
