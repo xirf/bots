@@ -17,7 +17,10 @@ const quotesList = JSON.parse(fs.readFileSync("lib/quotes.json", "utf-8"));
 const factList = JSON.parse(fs.readFileSync("lib/fact.json", "utf-8"));
 const NLP = require('@hiyurigi/nlp')("TextCorrection");
 
-let v = new NLP(["help", "contact", "sticker", "stickernobg", "pdf", "aksara", "toimg", "togif", "textsticker", "giftextsticker", "gifsticker", "write", "brainly", "quotes", "randomfact", "wikipedia", "math", "bplanet", "t"]);
+const scrapy = require('node-scrapy');
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+
+let v = new NLP(["help", "contact", "sticker","stiker","stikernobg", "stickernobg", "pdf", "aksara", "toimg", "togif", "textsticker", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes","kbbi", "randomfact", "wikipedia", "math", "bplanet", "t"]);
 
 module.exports = async (conn, message) => {
 	const senderNumber = message.key.remoteJid;
@@ -179,6 +182,48 @@ Didukung oleh:
 			conn.sendMessage(senderNumber, text, MessageType.text, { quoted: message });
 			break;
 		}
+
+		case "!kbbi":
+			{
+		const url ='https://kbbi.kemdikbud.go.id/entri/';
+const model = {
+  lema: 'h2',
+  arti: ['ol li', 'ul.adjusted-par'],
+  makna: 'ul.adjusted-par li'
+}
+
+fetch(url + encodeURIComponent(parameter)).then((res) => res.text()).then((body) => {
+        result = scrapy.extract(body, model);
+
+        let judul = ('arti kata *( ' + result.lema + ')* dalam KBBI adalah:\n\n');
+
+        let data = result?.arti
+	
+//	console.log(body);
+//	console.log(data);
+	
+	if(data == null){
+		const text = judul + result.makna;
+
+		conn.sendMessage(senderNumber, text, MessageType.text, {quoted: message});
+
+	}else if(data != null){
+
+        data.forEach((arr, i)=> {
+                data[i] = (i + 1).toString() + ". "  + arr
+        });	
+
+        let isi = data.join('\n\n');
+
+        const text = judul + isi;
+        conn.sendMessage(senderNumber, text, MessageType.text, {quoted: message}); 
+
+}else{
+	conn.sendMessage(senderNumber, "maaf tidak ditemukan coba periksa ejaan atau coba kata lainnya", MessageType.text, {quoted: message});
+};
+});
+	  break;
+			}
 		case "!aksara":
 			{
 			if (quotedMessage){

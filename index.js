@@ -1,6 +1,15 @@
-// https://github.com/salismazaya/whatsapp-bot
-// Jika ingin mengubah / mengedit, mohon untuk tidak menghilangkan link github asli di dalam bot terimakasih ^_^
-
+/* WA BOTS
+ * 
+ * Common error selalu meminta kode QR:
+ * pergi ke view-source:https://web.whatsapp.com
+ * 
+ * cari tag ini 
+ *
+ * <meta name="binary-transparency-manifest-key" content="x.xxxx.xx"/>
+ *
+ * ganti version di kode dibawah dengan isi dari "content"
+ *
+ */
 const fs = require("fs");
 const messageHandler = require("./messageHandler.js");
 const http = require("http");
@@ -51,8 +60,10 @@ conn.on("chat-update", async (message) => {
 });
 
 const start = async () => {
-	const version = (await axios.get("https://raw.githubusercontent.com/evaasmakula/bots/master/wa-web-version.txt")).data.split(",").map(x => parseInt(x));
-	conn.version = version;
+
+	// ganti jika terus meminta kode QR
+	conn.version = [2,2142,12];
+
 	if (fs.existsSync("login.json")) conn.loadAuthInfo("login.json");
 	conn.connect()
 		.then(() => {
