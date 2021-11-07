@@ -1,0 +1,51 @@
+Welcome to *EVA BOTS* berikut beberapa perintah yang bisa kamu gunakan.
+
+Jika kamu memiliki saran fitur langsung chat ke Facebook ya!
+
+╔═[ BASIC ]
+║
+╠ *!help*
+╠ *!contact* 
+╠ *!donatur*
+╚════════
+
+╔═[ EDUKASI ]
+║
+╠ *!kbbi [query]*
+╠ *!wikipedia [query]*
+╠ ~*brainly [query]*~
+╚════════
+
+╔═ [ CONVERT ]
+║
+╠ *!aksara [text]*
+╠ *!hex [text]*
+╠ *!binary [text]*
+╠ *!pdf (privasi chat only)*
+╠ *!bplanet [alias] [text]*
+║     ╚ !bplanet g anda sehat?
+╚════════
+
+╔═ [ MEDIA ]
+║   ╚ Reply stikernya ya
+╠ *!sticker*
+╠ *!stickernobg*
+╠ *!gifsticker*
+╠ *!textsticker [text]*
+╠ *!toimg*
+╠ *!togif*
+╠ *!write [text]*
+╚════════
+
+╔═ [ TEXT ]
+║
+╠ *!Ruotes*
+╠ *!Randomfact*
+╠ *!tmot*
+╚════════
+
+╔═ [ OTHER ]
+║
+╠ *!math*
+╠ *!yt [link]*
+╚════════

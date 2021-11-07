@@ -1,5 +1,3 @@
-// https://github.com/salismazaya/whatsapp-bot
-
 const fs = require("fs");
 const axios = require("axios");
 const PDFDocument = require("pdfkit");
@@ -14,13 +12,13 @@ const inPdfInput = [];
 const questionAnswer = {};
 const bufferImagesForPdf = {};
 const quotesList = JSON.parse(fs.readFileSync("lib/quotes.json", "utf-8"));
-const factList = JSON.parse(fs.readFileSync("lib/fact.json", "utf-8"));
+const factList = JSON.parse(fs.readFileSync("./lib/fact.json", "utf-8"));
+const tmotList = JSON.parse(fs.readFileSync("./lib/tmot.json", "utf-8"));
 const NLP = require('@hiyurigi/nlp')("TextCorrection");
-
 const scrapy = require('node-scrapy');
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
-let v = new NLP(["help", "contact", "sticker","stiker","stikernobg", "stickernobg", "pdf", "aksara", "toimg", "togif", "textsticker", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes","kbbi", "randomfact", "wikipedia", "math", "bplanet", "t"]);
+let v = new NLP(["help", "contact", "stickernobg", "stikernobg", "stiker", "sticker", "snobg", "pdf","bin", "binary", "hex", "aksara", "toimg", "togif", "textsticker","donatur", "tmot", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes","kbbi", "randomfact", "wikipedia","yt", "math", "bplanet", "t"]);
 
 module.exports = async (conn, message) => {
 	const senderNumber = message.key.remoteJid;
@@ -31,10 +29,9 @@ module.exports = async (conn, message) => {
 	const quotedMessageContext = extendedTextMessage && extendedTextMessage.contextInfo && extendedTextMessage.contextInfo;
 	const quotedMessage = quotedMessageContext && quotedMessageContext.quotedMessage;
 	const textMessage = message.message.conversation || message.message.extendedTextMessage && message.message.extendedTextMessage.text || imageMessage && imageMessage.caption || videoMessage && videoMessage.caption
+
 	let command, parameter;
 	if (textMessage) {
-		// command = textMessage.trim().split(" ")[0];
-		// parameter = textMessage.trim().split(" ").slice(1).join(" ");
 
 		let a = textMessage.trim().split("\n");
 		let b = "";
@@ -51,7 +48,7 @@ module.exports = async (conn, message) => {
 
 		if(pre == "!"){
 
-		let result = v.TextCorrection({Needle: d, Threshold: 0.4, NgramsLength: 1});
+		let result = v.TextCorrection({Needle: d, Threshold: 0.7, NgramsLength: 1});
 		f = result[0].Key;
 
 		e = "!";
@@ -108,61 +105,40 @@ module.exports = async (conn, message) => {
 		{
 			let result = v.TextCorrection({Needle: parameter, Threshold: 0.4, NgramsLength: 1});
 			const text = result[0].Key;
+			console.log(result);
 			conn.sendMessage(senderNumber, text, MessageType.text, { quoted: message });
 			break;
 		}
 
 
+		case "!binary":
+		case "!bin":
+		{
+			const bin = parameter.split('').map(function (char) {
+				return char.charCodeAt(0).toString(2);
+			}).join(' ');
+			const text = `hasil konversi *${parameter}* ke Biner adalah\n\n*${bin}*`;
+
+			conn.sendMessage(senderNumber, text, MessageType.text, {quoted: message});
+			break;
+		}
+
+		case "!hex":
+		{
+			let hexa =  parameter.split('').map(function (char) {
+				return char.charCodeAt(0).toString(16);
+			}).join(' ');
+
+			const text = `hasil konversi *${parameter}* ke Hexadesimal adalah:\n\n*${hexa}*`
+
+			conn.sendMessage(senderNumber, text, MessageType.text, {quoted: message});
+			break;
+		}
+
 		case "!help":
 		case "!menu":
 		{
-			const text = `Halo kak selamat datang di *${conn.user.name}*!
-
-[[ LIST MENU ]]
-
-*!help* > menampilkan semua perintah
-
-*!contact* > informasi pembuat bot
-
-*!sticker* > membuat sticker
-
-*!stickernobg* > membuat sticker tanpa background
-
-*!pdf* > membuat pdf dari gambar
-
-*!aksara* > mengubah teks latin ke aksara jawa
-
-*!toimg* > mengubah sticker menjadi gambar
-
-*!togif* > mengubah stiker menjadi gif
-
-*!textsticker [text]* > membuat text sticker
-  contoh: !textsticker "ini sticker"
-
-*!giftextsticker [text]* > membuat text sticker jedag jedug
-  contoh: !giftextsticker "ini sticker"
-
-*!gifsticker* > membuat sticker bergerak
-
-*!write [masukan text disini]* > menulis ke kertas
-  contoh: !write "ini tulisanku"
-
-*!brainly [pertanyaan kamu]* > mencari pertanyaan dan jawaban di brainly
-  contoh: !brainly "matematika diskrit"
-
-*!quotes* >  mendapatkan quotes
-
-*!randomfact* > mendapatkan pengetahuan acak
-
-*!wikipedia [query]* > mencari dan membaca artikel di wikipedia
-   contoh: !wikipedia "naga bonar"
-
-*!math* > tantangan mengerjakan soal matematika 
-
-*!bplanet [alias] [text]*
-   contoh: !bplanet g kamu lagi ngapain?
-
-apa? mau traktir aku? boleh banget https://trakteer.id/eva_`;
+			const text = fs.readFileSync("./lib/menu.txt", 'utf-8');
 
 			conn.sendMessage(senderNumber, text, MessageType.text, { quoted: message });
 			break;
@@ -170,16 +146,14 @@ apa? mau traktir aku? boleh banget https://trakteer.id/eva_`;
 
 		case "!contact":
 		{
-			const text = `Temukan saya di
-
-Facebook: fb.me/evaasmakula
-Email: evaasmakula@gmail.com
-
-Didukung oleh:
-*Kaffu Theine* : fb.me/hiyurigi
-*Echlus*       : facebook.com/echlus
-`;
+			const text = fs.readFileSync("./lib/contact.txt", "utf-8");
 			conn.sendMessage(senderNumber, text, MessageType.text, { quoted: message });
+			break;
+		}
+		case "!donatur":
+		{
+			const text = fs.readFileSync("./lib/donatur.txt", "utf-8");
+			conn.sendMessage(senderNumber, text, MessageType.text, {quoted: message});
 			break;
 		}
 
@@ -354,6 +328,14 @@ fetch(url + encodeURIComponent(parameter)).then((res) => res.text()).then((body)
 			const quotes = quotesList[Math.floor(Math.random() * quotesList.length)];
 			const text = `_"${quotes.quote}"_\n\n - ${quotes.by}`;
 			conn.sendMessage(senderNumber, text, MessageType.text, { quoted: message });
+			break;
+		}
+		
+		case "!tmot":
+		{
+			const mot = tmotList[Math.floor(Math.random() * tmotList.length)];
+			const text = `_"${mot}"_`;
+			conn.sendMessage(senderNumber, text, MessageType.text, {quoted: message});
 			break;
 		}
 
@@ -550,6 +532,7 @@ fetch(url + encodeURIComponent(parameter)).then((res) => res.text()).then((body)
                  * result: kagamugu lagagigi ngagapagaigin
                  **/
                 case '!bplanet':
+		{
                     if (quotedMessage) message.message = quotedMessage
                     if (!!parameter) {
                         var [ alias, ...text ] = parameter.split` `
@@ -563,6 +546,60 @@ fetch(url + encodeURIComponent(parameter)).then((res) => res.text()).then((body)
                             quoted: message
                         })
                     }
+		}
+		case "!yt":
+		{
+			if(!parameter){
+				conn.sendMessage(senderNumber, "Link nya mana 😭", MessageType.text, {quoted: message});
+				break;
+			}
+
+		const url ='https://www.yt-download.org/api/button/videos/';
+		var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+
+			if(regExp.test(parameter)){
+
+			conn.sendMessage(senderNumber, "Tunggu sebentar ya :3", MessageType.text, { quoted: message });
+
+			var match = parameter.match(regExp);
+			var result = (match&&match[7].length==11)? match[7] : false;
+			var links = url + result;
+
+			const model = {
+			  link: ['a.shadow-xl (href)'],
+			  quality: ['div.text-shadow-1'],
+			};
+
+			fetch(links).then((res) => res.text()).then((body) => {
+		 	  let result = scrapy.extract(body, model);
+				console.log(result.link);
+			if(result.link == null){
+				conn.sendMessage(senderNumber, "Aduh😭, videonya gabisa diunduh, mungkin video kamu mengandung batasa seperti 18+, Video Pribadi atau diblokir di negaramu 🥲. \n\nAlternatifnya gunakan video lain yang serupa dan tidak memiliki batasan misalnya video reupload👀.", MessageType.text, { quoted: message });
+			}else{
+				//start second if else
+				
+			  let thelink = result.link;
+			  let info1 = result.quality[1].replace(/\s+/g,'') + " " + result.quality[2];
+				if(result.quality.length < 4){
+					const text = `Videomu sudah siap diunduh, silahkan pilih resolusi dan klik link yang tersedia untuk memulai pengunduhan\n\n*${info1}* : ${thelink}`;
+					conn.sendMessage(senderNumber, text, MessageType.text, {quoted: message});
+				}else{
+			
+			  let info2 = result.quality[4].replace(/\s+/g,'') + " " + result.quality[5];
+
+  			  const text = `Videomu sudah siap diunduh, silahkan pilih resolusi dan klik link yang tersedia untuk memulai pengunduhan\n\n*${info1}* : ${thelink[0]}\n\n*${info2}* : ${thelink[1]}`;
+			
+			conn.sendMessage(senderNumber, text, MessageType.text, {quoted: message}); 
+				}
+				// end second if else
+		} 
+			});
+
+			}else{
+				conn.sendMessage(senderNumber, "Sepertinya link yang kamu masukkan salah, silahkan coba link lainnya ya.", MessageType.text, {quoted: message});
+			}
+		}
+
                     break
 		default:
 		{

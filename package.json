@@ -1,7 +1,7 @@
 {
-  "name": "whatsapp-bot",
-  "version": "1.0.1",
-  "description": "lightweight Whatsapp Bot",
+  "name": "EvA Bots",
+  "version": "1.0.2",
+  "description": "Simple and lightweight Whatsapp Bot",
   "main": "index.js",
   "scripts": {
     "test": "",
@@ -9,26 +9,28 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/salismazaya/whatsapp-bot.git"
+    "url": "git+https://github.com/evaasmakula/bots.git"
   },
-  "author": "Salis Mazaya",
+  "author": "EVA",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/salismazaya/whatsapp-bot/issues"
+    "url": "https://github.com/evaasmakula/bots/issues"
   },
-  "homepage": "https://github.com/salismazaya/whatsapp-bot#readme",
+  "homepage": "https://github.com/evaasmakula/bots#readme",
   "dependencies": {
     "@adiwajshing/baileys": "3.4.1",
     "@hiyurigi/nlp": "^2.0.0-alpha.3",
     "@sajenid/aksara.js": "^1.0.0-beta.6",
     "axios": "^0.21.1",
     "brainly-scraper": "^1.0.3",
+    "cheerio": "^1.0.0-rc.10",
     "file-type": "16.2.0",
+    "node-fetch": "3.0.0",
+    "node-scrapy": "0.5.0",
     "node-tesseract-ocr": "^2.0.0",
     "pdfkit": "^0.11.0",
-    "node-scrapy": "0.5.0",
-    "node-fetch" : "3.0.0",
     "qrcode": "^1.4.4",
+    "qs": "^6.10.0",
     "socket.io": "^4.0.1",
     "wa-sticker-formatter": "2.8.0"
   }
