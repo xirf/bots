@@ -2,7 +2,7 @@ node_modules
 login.json
 .temp
 pnpm-lock.yaml
-*.jpg
+*.swp
 package-lock.json
 yarn.lock
 .jpeg
