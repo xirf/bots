@@ -42,10 +42,13 @@ Jika kamu memiliki saran fitur langsung chat ke Facebook ya!
 ╠ *!Ruotes*
 ╠ *!Randomfact*
 ╠ *!tmot*
+╠ *!lirik*
 ╚════════
 
 ╔═ [ OTHER ]
 ║
 ╠ *!math*
 ╠ *!yt [link]*
+╠ *!ytmp3 [link]*
+╠ *!gempa*
 ╚════════

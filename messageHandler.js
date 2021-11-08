@@ -7,6 +7,10 @@ const webpConverter = require("./lib/webpconverter.js")
 const bahasa_planet = require('./lib/bahasa_planet')
 const WSF = require("wa-sticker-formatter");
 const {
+	LyriksClient
+} = require("lyriks.js")
+const lyriksClient = new LyriksClient();
+const {
 	MessageType,
 	Mimetype
 } = require("@adiwajshing/baileys");
@@ -26,7 +30,7 @@ const fetch = (...args) => import('node-fetch').then(({
 }) => fetch(...args));
 const prefix = fs.readFileSync("./lib/prefix.txt", "utf-8");
 
-let v = new NLP(["help", "contact", "stickernobg","ytmp3", "gempa", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "tmot", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact", "wikipedia", "yt", "math", "bplanet", "t"]);
+let v = new NLP(["help","lirik", "lyrics", "contact", "stickernobg", "ytmp3", "gempa", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "tmot", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact", "wikipedia", "yt", "math", "bplanet", "t"]);
 
 module.exports = async (conn, message) => {
 	const senderNumber = message.key.remoteJid;
@@ -677,6 +681,31 @@ module.exports = async (conn, message) => {
 			}
 		}
 
+		case `${prefix}lirik`:
+		case `${prefix}lyrics`: 
+		{
+			if(!parameter){
+				conn.sendMessage(senderNumber, "lagunya mana ya kak?, silahkan diulangi ya,", MessageType.text, {
+					quoted: message
+				});
+			}
+			lyriksClient.getLyrics("dynamite").then(lyrik => {
+				if(!lyrik){
+					conn.sendMessage(senderNumber, `Aduh😭, kami tidak bisa mencari lirik dari lagu *${parameter}*.`, MessageType.text, {
+						quoted: message
+					});
+				}
+			
+				const title = lyrik.getAuthor()
+				const source = lyrik.getSource()
+				const url = lyrik.getURL()
+				const lyrics = lyrik.getContent()
+
+				const text = `Lirik lagu ${title}\n\n${lyrics}\n\nLirik diambil dari *${source}* kunjungi disini ya\n${url}`;
+			})
+			break;
+		}
+
 		case `${prefix}gempa`: {
 			const model = ['tr:nth-child(1) td'];
 			fetch('https://www.bmkg.go.id/gempabumi/gempabumi-terkini.bmkg').then((res) => res.text()).then((body) => {
@@ -689,7 +718,7 @@ module.exports = async (conn, message) => {
 				let kedalaman = result[5];
 				let lokasi = result[6];
 
-				const text = `informasi gempa terbaru:\nWaktu: *${waktu}*\nBujur: *${bujur}}*\nLintang: *${lintang}*\nMagnitudo: *${magnitudo}*\nKedalaman: *${kedalaman}*\nLokasi: *${lokasi}*`;
+				const text = `informasi gempa terbaru:\n\nWaktu: *${waktu}*\nBujur: *${bujur}*\nLintang: *${lintang}*\nMagnitudo: *${magnitudo}*\nKedalaman: *${kedalaman}*\nLokasi: *${lokasi}*`;
 
 				conn.sendMessage(senderNumber, text, MessageType.text, {
 					quoted: message
@@ -737,7 +766,7 @@ module.exports = async (conn, message) => {
 						let thelink = result.link;
 						let info1 = result.quality[1].replace(/\s+/g, '') + " " + result.quality[2];
 						if (result.quality.length < 4) {
-							const text = `Videomu sudah siap diunduh, silahkan pilih resolusi dan klik link yang tersedia untuk memulai pengunduhan\n\n*${info1}* : ${thelink}`;
+							const text = `Musik kamu sudah siap diunduh, silahkan pilih resolusi dan klik link yang tersedia untuk memulai pengunduhan\n\n*${info1}* : ${thelink}`;
 							conn.sendMessage(senderNumber, text, MessageType.text, {
 								quoted: message
 							});
@@ -745,7 +774,7 @@ module.exports = async (conn, message) => {
 
 							let info2 = result.quality[4].replace(/\s+/g, '') + " " + result.quality[5];
 
-							const text = `Videomu sudah siap diunduh, silahkan pilih resolusi dan klik link yang tersedia untuk memulai pengunduhan\n\n*${info1}* : ${thelink[0]}\n\n*${info2}* : ${thelink[1]}`;
+							const text = `Musik kamu sudah siap diunduh, silahkan pilih resolusi dan klik link yang tersedia untuk memulai pengunduhan\n\n*${info1}* : ${thelink[0]}\n\n*${info2}* : ${thelink[1]}`;
 
 							conn.sendMessage(senderNumber, text, MessageType.text, {
 								quoted: message
@@ -829,21 +858,21 @@ module.exports = async (conn, message) => {
 		}
 
 
-	default: {
-		if (quotedMessage && questionAnswer[quotedMessageContext.stanzaId] && textMessage) {
-			const answer = questionAnswer[quotedMessageContext.stanzaId];
-			if (answer == parseInt(textMessage)) {
-				conn.sendMessage(senderNumber, "Keren! jawaban benar", MessageType.text, {
-					quoted: message
-				});
-				delete questionAnswer[quotedMessageContext.stanzaId];
-			} else {
-				conn.sendMessage(senderNumber, "Jawaban salah!", MessageType.text, {
-					quoted: message
-				})
+		default: {
+			if (quotedMessage && questionAnswer[quotedMessageContext.stanzaId] && textMessage) {
+				const answer = questionAnswer[quotedMessageContext.stanzaId];
+				if (answer == parseInt(textMessage)) {
+					conn.sendMessage(senderNumber, "Keren! jawaban benar", MessageType.text, {
+						quoted: message
+					});
+					delete questionAnswer[quotedMessageContext.stanzaId];
+				} else {
+					conn.sendMessage(senderNumber, "Jawaban salah!", MessageType.text, {
+						quoted: message
+					})
+				}
 			}
 		}
-	}
 
 	}
 }
