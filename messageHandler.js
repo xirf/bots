@@ -27,7 +27,7 @@ const fetch = (...args) => import('node-fetch').then(({
 }) => fetch(...args));
 const prefix = fs.readFileSync("./lib/prefix.txt", "utf-8");
 
-let v = new NLP(["help", "contact", "stickernobg", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "tmot", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact", "wikipedia", "yt", "math", "bplanet", "t"]);
+let v = new NLP(["help", "contact", "gempa", "chord", "lirik", "stickernobg", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "tmot", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact", "wikipedia", "yt", "math", "bplanet", "t"]);
 
 module.exports = async (conn, message) => {
 	const senderNumber = message.key.remoteJid;
