@@ -6,6 +6,7 @@ const tesseract = require("node-tesseract-ocr");
 const webpConverter = require("./lib/webpconverter.js")
 const bahasa_planet = require('./lib/bahasa_planet')
 const WSF = require("wa-sticker-formatter");
+const zahir = require("zahir-api");
 const {
 	MessageType,
 	Mimetype
@@ -676,6 +677,45 @@ module.exports = async (conn, message) => {
 				})
 			}
 		}
+
+		case `${prefix}chord`: {
+			if (!parameter) {
+				conn.sendMessage(senderNumber, "Jangan lupa masukkan judul lagunnya ya kak :3", MessageType.text, {
+					quote: message
+				});
+			} else {
+				const text = zahir.Other.ChordLagu(parameter);
+
+				conn.sendMessage(senderNumber, text, MessageType.text, {
+					quote: message
+				});
+			}
+			break;
+		}
+		case `${prefix}lirik`: {
+			if (!parameter) {
+				conn.sendMessage(senderNumber, "Jangan lupa masukkan judul lagunnya ya kak :3", MessageType.text, {
+					quote: message
+				});
+			} else {
+				const text = zahir.Other.LirikLagu(parameter);
+
+				conn.sendMessage(senderNumber, text, MessageType.text, {
+					quote: message
+				});
+			}
+			break;
+		}
+
+		case `${prefix}gempa`: {
+			const text = zahir.Edukasi.Gempa()
+
+			conn.sendMessage(senderNumber, text, MessageType.text, {
+				quoted: message
+			});
+			break;
+		}
+
 		case `${prefix}yt`: {
 			if (!parameter) {
 				conn.sendMessage(senderNumber, "Link nya mana 😭", MessageType.text, {
