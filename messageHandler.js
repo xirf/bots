@@ -26,7 +26,7 @@ const fetch = (...args) => import('node-fetch').then(({
 }) => fetch(...args));
 const prefix = fs.readFileSync("./lib/prefix.txt", "utf-8");
 
-let v = new NLP(["help", "contact", "stickernobg", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "tmot", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact", "wikipedia", "yt", "math", "bplanet", "t"]);
+let v = new NLP(["help", "contact", "stickernobg","ytmp3", "gempa", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "tmot", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact", "wikipedia", "yt", "math", "bplanet", "t"]);
 
 module.exports = async (conn, message) => {
 	const senderNumber = message.key.remoteJid;
@@ -677,6 +677,92 @@ module.exports = async (conn, message) => {
 			}
 		}
 
+		case `${prefix}gempa`: {
+			const model = ['tr:nth-child(1) td'];
+			fetch('https://www.bmkg.go.id/gempabumi/gempabumi-terkini.bmkg').then((res) => res.text()).then((body) => {
+				let result = scrapy.extract(body, model);
+
+				let waktu = result[1];
+				let lintang = result[2];
+				let bujur = result[3];
+				let magnitudo = result[4];
+				let kedalaman = result[5];
+				let lokasi = result[6];
+
+				const text = `informasi gempa terbaru:\nWaktu: *${waktu}*\nBujur: *${bujur}}*\nLintang: *${lintang}*\nMagnitudo: *${magnitudo}*\nKedalaman: *${kedalaman}*\nLokasi: *${lokasi}*`;
+
+				conn.sendMessage(senderNumber, text, MessageType.text, {
+					quoted: message
+				});
+			});
+			break;
+		}
+
+		case `${prefix}ytmp3`: {
+			if (!parameter) {
+				conn.sendMessage(senderNumber, "Link nya mana 😭", MessageType.text, {
+					quoted: message
+				});
+				break;
+			}
+
+			const url = 'https://www.yt-download.org/api/button/mp3/';
+			var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+
+			if (regExp.test(parameter)) {
+
+				conn.sendMessage(senderNumber, "Tunggu sebentar ya :3", MessageType.text, {
+					quoted: message
+				});
+
+				var match = parameter.match(regExp);
+				var result = (match && match[7].length == 11) ? match[7] : false;
+				var links = url + result;
+
+				const model = {
+					link: ['a.shadow-xl (href)'],
+					quality: ['div.text-shadow-1'],
+				};
+
+				fetch(links).then((res) => res.text()).then((body) => {
+					let result = scrapy.extract(body, model);
+					console.log(result.link);
+					if (result.link == null) {
+						conn.sendMessage(senderNumber, "Aduh😭, videonya gabisa diunduh, mungkin video kamu mengandung batasa seperti 18+, Video Pribadi atau diblokir di negaramu 🥲. \n\nAlternatifnya gunakan video lain yang serupa dan tidak memiliki batasan misalnya video reupload👀.", MessageType.text, {
+							quoted: message
+						});
+					} else {
+						//start second if else
+
+						let thelink = result.link;
+						let info1 = result.quality[1].replace(/\s+/g, '') + " " + result.quality[2];
+						if (result.quality.length < 4) {
+							const text = `Videomu sudah siap diunduh, silahkan pilih resolusi dan klik link yang tersedia untuk memulai pengunduhan\n\n*${info1}* : ${thelink}`;
+							conn.sendMessage(senderNumber, text, MessageType.text, {
+								quoted: message
+							});
+						} else {
+
+							let info2 = result.quality[4].replace(/\s+/g, '') + " " + result.quality[5];
+
+							const text = `Videomu sudah siap diunduh, silahkan pilih resolusi dan klik link yang tersedia untuk memulai pengunduhan\n\n*${info1}* : ${thelink[0]}\n\n*${info2}* : ${thelink[1]}`;
+
+							conn.sendMessage(senderNumber, text, MessageType.text, {
+								quoted: message
+							});
+						}
+						// end second if else
+					}
+				});
+
+			} else {
+				conn.sendMessage(senderNumber, "Sepertinya link yang kamu masukkan salah, silahkan coba link lainnya ya.", MessageType.text, {
+					quoted: message
+				});
+			}
+			break;
+		}
+
 		case `${prefix}yt`: {
 			if (!parameter) {
 				conn.sendMessage(senderNumber, "Link nya mana 😭", MessageType.text, {
@@ -739,9 +825,10 @@ module.exports = async (conn, message) => {
 					quoted: message
 				});
 			}
+			break;
 		}
 
-		break
+
 	default: {
 		if (quotedMessage && questionAnswer[quotedMessageContext.stanzaId] && textMessage) {
 			const answer = questionAnswer[quotedMessageContext.stanzaId];
