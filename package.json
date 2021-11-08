@@ -32,7 +32,6 @@
     "qrcode": "^1.4.4",
     "qs": "^6.10.0",
     "socket.io": "^4.0.1",
-    "wa-sticker-formatter": "2.8.0",
-    "zahir-api": "^1.0.3"
+    "wa-sticker-formatter": "2.8.0"
   }
 }

@@ -6,7 +6,6 @@ const tesseract = require("node-tesseract-ocr");
 const webpConverter = require("./lib/webpconverter.js")
 const bahasa_planet = require('./lib/bahasa_planet')
 const WSF = require("wa-sticker-formatter");
-const zahir = require("zahir-api");
 const {
 	MessageType,
 	Mimetype
@@ -27,7 +26,7 @@ const fetch = (...args) => import('node-fetch').then(({
 }) => fetch(...args));
 const prefix = fs.readFileSync("./lib/prefix.txt", "utf-8");
 
-let v = new NLP(["help", "contact", "gempa", "chord", "lirik", "stickernobg", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "tmot", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact", "wikipedia", "yt", "math", "bplanet", "t"]);
+let v = new NLP(["help", "contact", "stickernobg", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "tmot", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact", "wikipedia", "yt", "math", "bplanet", "t"]);
 
 module.exports = async (conn, message) => {
 	const senderNumber = message.key.remoteJid;
@@ -676,44 +675,6 @@ module.exports = async (conn, message) => {
 					quoted: message
 				})
 			}
-		}
-
-		case `${prefix}chord`: {
-			if (!parameter) {
-				conn.sendMessage(senderNumber, "Jangan lupa masukkan judul lagunnya ya kak :3", MessageType.text, {
-					quote: message
-				});
-			} else {
-				const text = zahir.Other.ChordLagu(parameter);
-
-				conn.sendMessage(senderNumber, text, MessageType.text, {
-					quote: message
-				});
-			}
-			break;
-		}
-		case `${prefix}lirik`: {
-			if (!parameter) {
-				conn.sendMessage(senderNumber, "Jangan lupa masukkan judul lagunnya ya kak :3", MessageType.text, {
-					quote: message
-				});
-			} else {
-				const text = zahir.Other.LirikLagu(parameter);
-
-				conn.sendMessage(senderNumber, text, MessageType.text, {
-					quote: message
-				});
-			}
-			break;
-		}
-
-		case `${prefix}gempa`: {
-			const text = zahir.Edukasi.Gempa()
-
-			conn.sendMessage(senderNumber, text, MessageType.text, {
-				quoted: message
-			});
-			break;
 		}
 
 		case `${prefix}yt`: {
