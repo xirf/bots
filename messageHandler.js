@@ -6,10 +6,8 @@ const tesseract = require("node-tesseract-ocr");
 const webpConverter = require("./lib/webpconverter.js")
 const bahasa_planet = require('./lib/bahasa_planet')
 const WSF = require("wa-sticker-formatter");
-const {
-	LyriksClient
-} = require("lyriks.js")
-const lyriksClient = new LyriksClient();
+const Genius = require("genius-lyrics");
+const Client = new Genius.Client("uO-XWa9PYgZn-t7UrNW_YTDlUrNCtMq8xmCxySRRGXP4QJ0mtFwoqi1z-ywdGmXj");
 const {
 	MessageType,
 	Mimetype
@@ -22,7 +20,6 @@ const questionAnswer = {};
 const bufferImagesForPdf = {};
 const quotesList = JSON.parse(fs.readFileSync("lib/quotes.json", "utf-8"));
 const factList = JSON.parse(fs.readFileSync("./lib/fact.json", "utf-8"));
-const tmotList = JSON.parse(fs.readFileSync("./lib/tmot.json", "utf-8"));
 const NLP = require('@hiyurigi/nlp')("TextCorrection");
 const scrapy = require('node-scrapy');
 const fetch = (...args) => import('node-fetch').then(({
@@ -30,7 +27,7 @@ const fetch = (...args) => import('node-fetch').then(({
 }) => fetch(...args));
 const prefix = fs.readFileSync("./lib/prefix.txt", "utf-8");
 
-let v = new NLP(["help","lirik", "lyrics", "contact", "stickernobg", "ytmp3", "gempa", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "tmot", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact", "wikipedia", "yt", "math", "bplanet", "t"]);
+let v = new NLP(["help","lirik", "lyrics", "contact", "stickernobg", "ytmp3", "gempa", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact", "wikipedia", "yt", "math", "bplanet", "t"]);
 
 module.exports = async (conn, message) => {
 	const senderNumber = message.key.remoteJid;
@@ -407,15 +404,6 @@ module.exports = async (conn, message) => {
 			break;
 		}
 
-		case `${prefix}tmot`: {
-			const mot = tmotList[Math.floor(Math.random() * tmotList.length)];
-			const text = `_"${mot}"_`;
-			conn.sendMessage(senderNumber, text, MessageType.text, {
-				quoted: message
-			});
-			break;
-		}
-
 		case `${prefix}randomfact`:
 		case `${prefix}fact`: {
 			const fact = factList[Math.floor(Math.random() * factList.length)];
@@ -679,6 +667,7 @@ module.exports = async (conn, message) => {
 					quoted: message
 				})
 			}
+			break;
 		}
 
 		case `${prefix}lirik`:
@@ -689,20 +678,19 @@ module.exports = async (conn, message) => {
 					quoted: message
 				});
 			}
-			lyriksClient.getLyrics("dynamite").then(lyrik => {
-				if(!lyrik){
-					conn.sendMessage(senderNumber, `Aduh😭, kami tidak bisa mencari lirik dari lagu *${parameter}*.`, MessageType.text, {
-						quoted: message
-					});
-				}
 			
-				const title = lyrik.getAuthor()
-				const source = lyrik.getSource()
-				const url = lyrik.getURL()
-				const lyrics = lyrik.getContent()
+			const searches = await Client.songs.search(parameter);
+			const firstSong = searches[0]
 
-				const text = `Lirik lagu ${title}\n\n${lyrics}\n\nLirik diambil dari *${source}* kunjungi disini ya\n${url}`;
-			})
+			if(!firstSong){
+				conn.sendMessage(senderNumber, `maaf kami tidak bisa menemukan lirik dari *${parameter}* silahkan coba lagu yang lain`, MessageType.text, {quoted: message});
+			}else{
+
+			const lyrics = await firstSong.lyrics();
+			const text = `lirik lagu *${firstSong.fullTitle}*\n\n${lyrics}`
+
+				conn.sendMessage(senderNumber, text, MessageType.text, {quoted: message});
+			}
 			break;
 		}
 
@@ -822,7 +810,7 @@ module.exports = async (conn, message) => {
 					let result = scrapy.extract(body, model);
 					console.log(result.link);
 					if (result.link == null) {
-						conn.sendMessage(senderNumber, "Aduh😭, videonya gabisa diunduh, mungkin video kamu mengandung batasa seperti 18+, Video Pribadi atau diblokir di negaramu 🥲. \n\nAlternatifnya gunakan video lain yang serupa dan tidak memiliki batasan misalnya video reupload👀.", MessageType.text, {
+						conn.sendMessage(senderNumber, "Aduh😭, videonya gabisa diunduh, mungkin video kamu mengandung batasa seperti 17+, Video Pribadi atau diblokir di negaramu 🥲. \n\nAlternatifnya gunakan video lain yang serupa dan tidak memiliki batasan misalnya video reupload👀.", MessageType.text, {
 							quoted: message
 						});
 					} else {

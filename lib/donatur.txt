@@ -2,4 +2,13 @@ Terimakasih banyak kepada orang baik yang sudah mendukung *EvA Bot*.
 
 - Apis
 - Muhammad Raihan Pratama
-- dan kalian semua yang menggunakan bot ini 🥰
+- Khoolid
+
+dan kalian semua yang menggunakan bot ini 🥰
+
+jika kalian ingin membantu pengembangan bot ini bisa dengan membuat fitur baru melalui _pull request_ di github.
+
+kalian juga bisa mentraktir kami di trakteer
+
+Github___: https://github.com/evaasmakula/bots
+Trakteer_: https://trakteer.id/eva_

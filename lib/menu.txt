@@ -33,21 +33,23 @@ Jika kamu memiliki saran fitur langsung chat ke Facebook ya!
 ╠ *!gifsticker*
 ╠ *!textsticker [text]*
 ╠ *!toimg*
+║   ╚ Sticker ke gambar
 ╠ *!togif*
+║   ╚ Sticker ke Gif
 ╠ *!write [text]*
 ╚════════
 
 ╔═ [ TEXT ]
 ║
 ╠ *!Ruotes*
-╠ *!Randomfact*
-╠ *!tmot*
-╠ *!lirik*
+╠ *!Randomfact* / *!fact*
+╠ *!lirik* (genius)
 ╚════════
 
 ╔═ [ OTHER ]
 ║
 ╠ *!math*
+║  ╚ Tantangan mengerjakan soal
 ╠ *!yt [link]*
 ╠ *!ytmp3 [link]*
 ╠ *!gempa*
