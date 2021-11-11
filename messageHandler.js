@@ -2,6 +2,7 @@ const fs = require("fs");
 const axios = require("axios");
 const scrapy = require('node-scrapy');
 const PDFDocument = require("pdfkit");
+const teslang = require('./lib/lang');
 const Genius = require("genius-lyrics");
 const brainly = require("brainly-scraper");
 const WSF = require("wa-sticker-formatter");
@@ -32,7 +33,7 @@ const {
 
 const Client = new Genius.Client("uO-XWa9PYgZn-t7UrNW_YTDlUrNCtMq8xmCxySRRGXP4QJ0mtFwoqi1z-ywdGmXj");
 
-let v = new NLP(["help","lirik", "lyrics", "contact", "tl", "translate", "stickernobg", "ytmp3", "gempa", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact", "wikipedia", "yt", "math", "bplanet", "t"]);
+let v = new NLP(["help", "lirik", "lyrics", "contact", "tl", "translate", "stickernobg", "ytmp3", "gempa", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact", "wikipedia", "yt", "math", "bplanet", "t"]);
 
 module.exports = async (conn, message) => {
 	const senderNumber = message.key.remoteJid;
@@ -676,25 +677,28 @@ module.exports = async (conn, message) => {
 		}
 
 		case `${prefix}lirik`:
-		case `${prefix}lyrics`: 
-		{
-			if(!parameter){
+		case `${prefix}lyrics`: {
+			if (!parameter) {
 				conn.sendMessage(senderNumber, "lagunya mana ya kak?, silahkan diulangi ya,", MessageType.text, {
 					quoted: message
 				});
 			}
-			
+
 			const searches = await Client.songs.search(parameter);
 			const firstSong = searches[0]
 
-			if(!firstSong){
-				conn.sendMessage(senderNumber, `maaf kami tidak bisa menemukan lirik dari *${parameter}* silahkan coba lagu yang lain`, MessageType.text, {quoted: message});
-			}else{
+			if (!firstSong) {
+				conn.sendMessage(senderNumber, `maaf kami tidak bisa menemukan lirik dari *${parameter}* silahkan coba lagu yang lain`, MessageType.text, {
+					quoted: message
+				});
+			} else {
 
-			const lyrics = await firstSong.lyrics();
-			const text = `lirik lagu *${firstSong.fullTitle}*\n\n${lyrics}`
+				const lyrics = await firstSong.lyrics();
+				const text = `lirik lagu *${firstSong.fullTitle}*\n\n${lyrics}`
 
-				conn.sendMessage(senderNumber, text, MessageType.text, {quoted: message});
+				conn.sendMessage(senderNumber, text, MessageType.text, {
+					quoted: message
+				});
 			}
 			break;
 		}
@@ -784,11 +788,50 @@ module.exports = async (conn, message) => {
 			}
 			break;
 		}
-		case `${parameter}tl`:
-		case `${parameter}translate`:
-			{
 
+		case `${prefix}tl`:
+		case `${prefix}translate`: {
+
+			if (!parameter) {
+				conn.sendMessage(senderNumber, "Mau translate apa ya kak?", MessageType.text, {
+					quoted: message
+				})
+			} else {
+				const language = parameter.split(" ")[0];
+				const text = parameter.split(" ").splice(1).join(" ");
+				if (teslang.isSupported(language)) {
+
+					translate(text, {
+						to: language
+					}).then(res => {
+						let result = res.text;
+						let dari = res.from.language.iso;
+						let texts = `*${result}\n\nMerupakan hasil translate teks kamu dari *${dari}* ke *${text}`
+						conn.sendMessage(senderNumber, texts, MessageType.text, {quoted: message});
+					}).catch(err => {
+						console.error(err);
+					});
+				} else {
+					const buttons = [{
+						buttonId: 'id1',
+						buttonText: {
+							displayText: '!kodebahasa'
+						},
+						type: 1
+					}]
+
+					const buttonMessage = {
+						contentText: "Maaf kode bahasa salah atau mungkin kamu lupa memasukkan kode bahasa.",
+						footerText: 'klik untuk mengetahui kode bahasa',
+						buttons: buttons,
+						headerType: 1
+					}
+
+					conn.sendMessage(senderNumber, buttonMessage, MessageType.buttonsMessage);
+				}
 			}
+			break;
+		}
 		case `${prefix}yt`: {
 			if (!parameter) {
 				conn.sendMessage(senderNumber, "Link nya mana 😭", MessageType.text, {

@@ -1,9 +1,15 @@
+// const translate = require('google-translate-api');
 
-var start = Date.now();
-
-for(i = 0; i < 10000; i++){
-    console.log("js " + i);
+ 
+if(teslang.isSupported('id')){
+    console.log("true");
+}else{
+    console.log("false")
 }
 
-var end = Date.now();
-console.log(`Execution time: ${end - start} ms`);
+// translate('Ik spreek Engels', {to: 'sdf'}).then(res => {
+//     console.log(res.text);
+//     //=> I speak English
+//     console.log(res.from.language.iso);
+//     //=> nl
+// });
