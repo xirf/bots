@@ -1,33 +1,38 @@
 const fs = require("fs");
 const axios = require("axios");
+const scrapy = require('node-scrapy');
 const PDFDocument = require("pdfkit");
-const brainly = require("brainly-scraper");
-const tesseract = require("node-tesseract-ocr");
-const webpConverter = require("./lib/webpconverter.js")
-const bahasa_planet = require('./lib/bahasa_planet')
-const WSF = require("wa-sticker-formatter");
 const Genius = require("genius-lyrics");
-const Client = new Genius.Client("uO-XWa9PYgZn-t7UrNW_YTDlUrNCtMq8xmCxySRRGXP4QJ0mtFwoqi1z-ywdGmXj");
+const brainly = require("brainly-scraper");
+const WSF = require("wa-sticker-formatter");
+const tesseract = require("node-tesseract-ocr");
+const translate = require('google-translate-api');
+const bahasa_planet = require('./lib/bahasa_planet')
+const webpConverter = require("./lib/webpconverter.js")
+const prefix = fs.readFileSync("./lib/prefix.txt", "utf-8");
+const quotesList = JSON.parse(fs.readFileSync("lib/quotes.json", "utf-8"));
+const factList = JSON.parse(fs.readFileSync("./lib/fact.json", "utf-8"));
+const NLP = require('@hiyurigi/nlp')("TextCorrection");
+const bufferImagesForPdf = {};
+const questionAnswer = {};
+const inPdfInput = [];
+
+const fetch = (...args) => import('node-fetch').then(({
+	default: fetch
+}) => fetch(...args));
+
 const {
 	MessageType,
 	Mimetype
 } = require("@adiwajshing/baileys");
+
 const {
 	LatinKeAksara
 } = require("@sajenid/aksara.js");
-const inPdfInput = [];
-const questionAnswer = {};
-const bufferImagesForPdf = {};
-const quotesList = JSON.parse(fs.readFileSync("lib/quotes.json", "utf-8"));
-const factList = JSON.parse(fs.readFileSync("./lib/fact.json", "utf-8"));
-const NLP = require('@hiyurigi/nlp')("TextCorrection");
-const scrapy = require('node-scrapy');
-const fetch = (...args) => import('node-fetch').then(({
-	default: fetch
-}) => fetch(...args));
-const prefix = fs.readFileSync("./lib/prefix.txt", "utf-8");
 
-let v = new NLP(["help","lirik", "lyrics", "contact", "stickernobg", "ytmp3", "gempa", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact", "wikipedia", "yt", "math", "bplanet", "t"]);
+const Client = new Genius.Client("uO-XWa9PYgZn-t7UrNW_YTDlUrNCtMq8xmCxySRRGXP4QJ0mtFwoqi1z-ywdGmXj");
+
+let v = new NLP(["help","lirik", "lyrics", "contact", "tl", "translate", "stickernobg", "ytmp3", "gempa", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact", "wikipedia", "yt", "math", "bplanet", "t"]);
 
 module.exports = async (conn, message) => {
 	const senderNumber = message.key.remoteJid;
@@ -779,7 +784,11 @@ module.exports = async (conn, message) => {
 			}
 			break;
 		}
+		case `${parameter}tl`:
+		case `${parameter}translate`:
+			{
 
+			}
 		case `${prefix}yt`: {
 			if (!parameter) {
 				conn.sendMessage(senderNumber, "Link nya mana 😭", MessageType.text, {
