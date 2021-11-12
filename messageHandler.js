@@ -7,7 +7,7 @@ const Genius = require("genius-lyrics");
 const brainly = require("brainly-scraper");
 const WSF = require("wa-sticker-formatter");
 const tesseract = require("node-tesseract-ocr");
-const translate = require('google-translate-api');
+const translate = require('translate-google');
 const bahasa_planet = require('./lib/bahasa_planet')
 const webpConverter = require("./lib/webpconverter.js")
 const prefix = fs.readFileSync("./lib/prefix.txt", "utf-8");
@@ -33,7 +33,7 @@ const {
 
 const Client = new Genius.Client("uO-XWa9PYgZn-t7UrNW_YTDlUrNCtMq8xmCxySRRGXP4QJ0mtFwoqi1z-ywdGmXj");
 
-let v = new NLP(["help", "lirik", "lyrics", "contact", "tl", "translate", "stickernobg", "ytmp3", "gempa", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact", "wikipedia", "yt", "math", "bplanet", "t"]);
+let v = new NLP(["help", "lirik", "lyrics", "contact", "tl", "translate", "stickernobg", "ytmp3", "gempa", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact", "wikipedia", "yt", "math", "bplanet","kodebahasa", "t"]);
 
 module.exports = async (conn, message) => {
 	const senderNumber = message.key.remoteJid;
@@ -43,7 +43,10 @@ module.exports = async (conn, message) => {
 	const extendedTextMessage = message.message.extendedTextMessage;
 	const quotedMessageContext = extendedTextMessage && extendedTextMessage.contextInfo && extendedTextMessage.contextInfo;
 	const quotedMessage = quotedMessageContext && quotedMessageContext.quotedMessage;
-	const textMessage = message.message.conversation || message.message.extendedTextMessage && message.message.extendedTextMessage.text || imageMessage && imageMessage.caption || videoMessage && videoMessage.caption
+
+	let buttons = message.message.buttonsResponseMessage
+
+	const textMessage = message.message.conversation || message.message.extendedTextMessage && message.message.extendedTextMessage.text || imageMessage && imageMessage.caption || videoMessage && videoMessage.caption || buttons.selectedDisplayText;
 
 	let command, parameter;
 	if (textMessage) {
@@ -804,9 +807,9 @@ module.exports = async (conn, message) => {
 					translate(text, {
 						to: language
 					}).then(res => {
-						let result = res.text;
-						let dari = res.from.language.iso;
-						let texts = `*${result}\n\nMerupakan hasil translate teks kamu dari *${dari}* ke *${text}`
+						let result = res;
+
+						let texts = `*${result}*`;
 						conn.sendMessage(senderNumber, texts, MessageType.text, {quoted: message});
 					}).catch(err => {
 						console.error(err);
@@ -815,9 +818,9 @@ module.exports = async (conn, message) => {
 					const buttons = [{
 						buttonId: 'id1',
 						buttonText: {
-							displayText: '!kodebahasa'
+							displayText: '!kodebahasa',
 						},
-						type: 1
+						type:1
 					}]
 
 					const buttonMessage = {
@@ -832,6 +835,14 @@ module.exports = async (conn, message) => {
 			}
 			break;
 		}
+
+		case `${prefix}kodebahasa`:
+			{
+				const text = fs.readFileSync("./lib/lang.txt", 'utf-8');
+				conn.sendMessage(senderNumber, text, MessageType.text, {quoted: message});
+
+				break;
+			}
 		case `${prefix}yt`: {
 			if (!parameter) {
 				conn.sendMessage(senderNumber, "Link nya mana 😭", MessageType.text, {
