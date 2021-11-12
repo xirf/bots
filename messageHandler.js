@@ -45,8 +45,15 @@ module.exports = async (conn, message) => {
 	const quotedMessage = quotedMessageContext && quotedMessageContext.quotedMessage;
 
 	let buttons = message.message.buttonsResponseMessage
+	console.log(buttons);
+	let buttonMessages;
+	if(buttons != undefined){
+		buttonMessages = buttons.selectedDisplayText
+	}
 
-	const textMessage = message.message.conversation || message.message.extendedTextMessage && message.message.extendedTextMessage.text || imageMessage && imageMessage.caption || videoMessage && videoMessage.caption || buttons.selectedDisplayText;
+	const textMessage = message.message.conversation || message.message.extendedTextMessage && message.message.extendedTextMessage.text || imageMessage && imageMessage.caption || videoMessage && videoMessage.caption || buttonMessages
+
+	console.log(message);
 
 	let command, parameter;
 	if (textMessage) {
