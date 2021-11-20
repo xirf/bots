@@ -33,7 +33,7 @@ const {
 
 const Client = new Genius.Client("uO-XWa9PYgZn-t7UrNW_YTDlUrNCtMq8xmCxySRRGXP4QJ0mtFwoqi1z-ywdGmXj");
 
-let v = new NLP(["help", "lirik", "lyrics", "contact", "tl", "translate", "stickernobg", "ytmp3", "gempa", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact", "wikipedia", "yt", "math", "bplanet","kodebahasa", "t"]);
+let v = new NLP(["help", "lirik", "lyrics", "contact",, "translate", "stickernobg", "ytmp3", "gempa", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact", "wikipedia", "yt", "math", "bplanet","kodebahasa","tl", "t"]);
 
 module.exports = async (conn, message) => {
 	const senderNumber = message.key.remoteJid;
@@ -45,15 +45,16 @@ module.exports = async (conn, message) => {
 	const quotedMessage = quotedMessageContext && quotedMessageContext.quotedMessage;
 
 	let buttons = message.message.buttonsResponseMessage
-	console.log(buttons);
+	
 	let buttonMessages;
 	if(buttons != undefined){
 		buttonMessages = buttons.selectedDisplayText
+	
 	}
 
 	const textMessage = message.message.conversation || message.message.extendedTextMessage && message.message.extendedTextMessage.text || imageMessage && imageMessage.caption || videoMessage && videoMessage.caption || buttonMessages
 
-	console.log(message);
+	const WAUser = conn.contacts[senderNumber].notify || conn.contacts[senderNumber].vname || conn.contacts[senderNumber].short || conn.contacts[senderNumber].name || conn.user.name 
 
 	let command, parameter;
 	if (textMessage) {
@@ -286,7 +287,7 @@ module.exports = async (conn, message) => {
 			const sticker = new WSF.Sticker("./" + imagePath, {
 				crop: false,
 				pack: "Stiker",
-				author: 'EvA BOT'
+				author: WAUser
 			});
 			await sticker.build();
 			fs.unlinkSync(imagePath);
@@ -518,7 +519,7 @@ module.exports = async (conn, message) => {
 			const sticker = new WSF.Sticker(response.data.image, {
 				crop: false,
 				pack: "Stiker",
-				author: 'EvA BOT'
+				author: WAUser
 			});
 			await sticker.build();
 			const bufferImage = await sticker.get();
@@ -572,7 +573,7 @@ module.exports = async (conn, message) => {
 			const sticker = new WSF.Sticker("./" + imagePath, {
 				animated: true,
 				pack: "STIKER",
-				author: 'EvA BOTS'
+				author: WAUser
 			});
 			await sticker.build();
 			fs.unlinkSync(imagePath);
@@ -654,7 +655,7 @@ module.exports = async (conn, message) => {
 			const sticker = new WSF.Sticker(data.data.image, {
 				crop: false,
 				pack: "sticker",
-				author: 'EvA BOTS'
+				author: WAUser
 			});
 			await sticker.build();
 			const bufferImage = await sticker.get();
@@ -692,6 +693,7 @@ module.exports = async (conn, message) => {
 				conn.sendMessage(senderNumber, "lagunya mana ya kak?, silahkan diulangi ya,", MessageType.text, {
 					quoted: message
 				});
+				break;
 			}
 
 			const searches = await Client.songs.search(parameter);
