@@ -55,7 +55,7 @@ conn.on("chat-update", async (message) => {
 		await messageHandler(conn, message);
 	} catch(e) {
 		console.log("[ERROR] " + e.message);
-		conn.sendMessage(message.key.remoteJid, "Terjadi error! coba lagi nanti", "conversation", { quoted: message });
+	//	conn.sendMessage(message.key.remoteJid, `Halo kak selamat datang di *${conn.user.name}* silahkan gunakan *!help* untuk melihat perintah yang tersedia`, "conversation", { quoted: message });
 	}
 });
 

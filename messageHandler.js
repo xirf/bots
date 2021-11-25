@@ -33,7 +33,7 @@ const {
 
 const Client = new Genius.Client("uO-XWa9PYgZn-t7UrNW_YTDlUrNCtMq8xmCxySRRGXP4QJ0mtFwoqi1z-ywdGmXj");
 
-let v = new NLP(["help", "lirik", "lyrics", "contact",, "translate", "stickernobg", "ytmp3", "gempa", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact", "wikipedia", "yt", "math", "bplanet","kodebahasa","tl", "t"]);
+let v = new NLP(["help", "menu", "lirik", "lyrics", "contact",, "translate", "stickernobg", "ytmp3", "gempa", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact","fact",  "wikipedia", "math", "bplanet","kodebahasa","yt", "tl", "t"]);
 
 module.exports = async (conn, message) => {
 	const senderNumber = message.key.remoteJid;
@@ -54,7 +54,26 @@ module.exports = async (conn, message) => {
 
 	const textMessage = message.message.conversation || message.message.extendedTextMessage && message.message.extendedTextMessage.text || imageMessage && imageMessage.caption || videoMessage && videoMessage.caption || buttonMessages
 
-	const WAUser = conn.contacts[senderNumber].notify || conn.contacts[senderNumber].vname || conn.contacts[senderNumber].short || conn.contacts[senderNumber].name || conn.user.name 
+	const sender = conn.contacts[senderNumber]
+
+	let WAUser = sender?.notify || sender?.short || sender?.name || sender?.vname || conn?.user?.name
+
+	if(textMessage == '.menu'){
+
+		const buttons = [
+  			{buttonId: 'id1', buttonText: {displayText: '!help'}, type: 1},
+  			{buttonId: 'id2', buttonText: {displayText: '!contact'}, type: 1}
+		]
+
+		const buttonMessage = {
+  			contentText: `Halo selamat datang di *${conn.user.name}* silahkan gunakan *${prefix}help* untuk melihat perintah yang tersedia 😆`,
+			footerText: 'kamu juga bisa menekan tombol ini',
+   			buttons: buttons,
+			headerType: 1
+		}
+
+		conn.sendMessage(senderNumber, buttonMessage, MessageType.buttonsMessage, {quoted: message});
+	}
 
 	let command, parameter;
 	if (textMessage) {
@@ -608,6 +627,32 @@ module.exports = async (conn, message) => {
 
 
 		case `${prefix}math`: {
+
+			let tingkat = parameter.split(" ")[0];
+
+			switch (tingkat){
+				case "trigonometri":
+				case "trig":
+					{
+						let a = Math.floor(Math.random()*101);
+						let b = Math.floor(Math.random()*101);
+						let answer = Math.sqrt(Math.pow(a,2) + Math.pow(b,2))
+						console.log('hasilnya adalah: ' + answer);
+						const msg = await conn.sendMessage(senderNumber, `diketahui sebuah segitiga siku-siku dengan  alas = ${a} dan tinggi = ${b}, tentukan sisi miringnya\n\nbalas pesan ini untuk menjawab`, MessageType.text, {quoted: message});
+
+						questionAnswer[msg.key.id] = parseInt(answer.toString())
+
+						console.log(questionAnswer[msg.key.id]);
+
+						setTimeout(() => {
+							if(questionAnswer[msg.key.id]){
+								conn.sendMessage(senderNumber, `ups waktu habis jawabannya adalah *${hasil}*`, MessageType.text, {quoted: msg});
+								delete questionAnswer[msg.key.id];
+							}
+						},600 * 1000)
+						break;
+					}
+				default:{
 			const response = await axios.get("https://salism3api.pythonanywhere.com/math/");
 			let image = await axios.get(response.data.image, {
 				"responseType": "arraybuffer"
@@ -618,7 +663,7 @@ module.exports = async (conn, message) => {
 				caption: "Balas pesan ini untuk menjawab!"
 			});
 			questionAnswer[msg.key.id] = response.data.answer;
-
+			console.log(questionAnswer[msg.key.id])
 			setTimeout(() => {
 				if (questionAnswer[msg.key.id]) {
 					conn.sendMessage(senderNumber, "Waktu habis!", MessageType.text, {
@@ -627,6 +672,9 @@ module.exports = async (conn, message) => {
 					delete questionAnswer[msg.key.id];
 				}
 			}, 600 * 1000);
+
+		}
+	}
 			break;
 		}
 
@@ -920,14 +968,17 @@ module.exports = async (conn, message) => {
 
 		default: {
 			if (quotedMessage && questionAnswer[quotedMessageContext.stanzaId] && textMessage) {
+				console.log(quotedMessage)
+				console.log(parseInt(textMessage))
 				const answer = questionAnswer[quotedMessageContext.stanzaId];
+				console.log(answer);
 				if (answer == parseInt(textMessage)) {
-					conn.sendMessage(senderNumber, "Keren! jawaban benar", MessageType.text, {
+					conn.sendMessage(senderNumber, "Mantap Jiwa Jawaban kamu benar 😆🎊🎉", MessageType.text, {
 						quoted: message
 					});
 					delete questionAnswer[quotedMessageContext.stanzaId];
 				} else {
-					conn.sendMessage(senderNumber, "Jawaban salah!", MessageType.text, {
+					conn.sendMessage(senderNumber, "Ups salah, coba lagi ya.", MessageType.text, {
 						quoted: message
 					})
 				}
