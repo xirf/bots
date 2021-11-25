@@ -1,10 +1,18 @@
 <p align="center">
-  <img src="https://i.ibb.co/Fxbt0PJ/IMG-20211119-155520.png" width=500/>
+  <img src="https://i.ibb.co/RvpWB5P/IMG-20211119-155520.png" width=500/>
 </p>
 
 <div align="center"><h3>Easy customization WhatsApp bot <br>With <a href="https://github.com/adiwajshing/Baileys">Baileys</a></h3></div> 
 
-### Termux
+### 🔧 Pengaturan pengguna
+Ubah prefix di ```lib/prefix.txt``` <br>
+Ubah owner di ```lib/contact.txt``` <br>
+Ubah donatur di ```lib/donatur.txt```<br>
+
+Sengaja dipisah dan tidak dibuat ```.json``` agar kalian makin mudah untuk mengotak-atik
+
+
+### 📱 Termux
 Install package
 ````
 pkg install nodejs-lts git tesseract libwebp wget imagemagick ffmpeg
@@ -19,7 +27,7 @@ wget https://raw.githubusercontent.com/tesseract-ocr/tessdata_best/master/ind.tr
 mv ind.traineddata /data/data/com.termux/files/usr/share/tessdata 
 ````
 
-### Install di Linux (ubuntu & debian)
+### 🐧 Install di Linux (ubuntu & debian)
 ```
 sudo apt install npm git webp imagemagick ffmpeg
 sudo apt install tesseract-ocr tesseract-ocr-ind
@@ -30,7 +38,7 @@ npm install
 node index.js
 ```
 
-### fitur
+### 🤖 fitur
 - convert gambar ke sticker
 - convert gambar ke sticker tanpa background
 - convert text ke sticker
@@ -55,7 +63,7 @@ node index.js
 - soal matematika
 - bahasa planet
 
-### Autocorrect
+### 🤓 Autocorrect
 Bot sudah dilengkapi fitur autocorrect perintah (beta) dan akan ditingkatkan lagi akurasinya
 Untuk test autocorrect silahkan gunakan ```(prefix)t perintah``` contoh ```!t kbbl```. Akan menjadi ```!kbbi```
 Console log:
