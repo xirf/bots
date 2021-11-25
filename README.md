@@ -2,7 +2,7 @@
   <img src="https://i.ibb.co/RvpWB5P/IMG-20211119-155520.png" width=500/>
 </p>
 
-<div align="center"><h3>Easy customization WhatsApp bot <br>With <a href="https://github.com/adiwajshing/Baileys">Baileys</a></h3></div> 
+<div align="center"><h3>Easy customization WhatsApp bot With <a href="https://github.com/adiwajshing/Baileys">Baileys</a></h3></div> 
 
 ### 🔧 Pengaturan pengguna
 Ubah prefix di ```lib/prefix.txt``` <br>
