@@ -26,6 +26,10 @@ Install ini jika ingin menggunakan OCR
 wget https://raw.githubusercontent.com/tesseract-ocr/tessdata_best/master/ind.traineddata
 mv ind.traineddata /data/data/com.termux/files/usr/share/tessdata 
 ````
+Jalankan ```install.sh```
+````
+bash install.sh
+````
 
 ### 🐧 Install di Linux (ubuntu & debian)
 ```
