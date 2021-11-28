@@ -32,7 +32,17 @@ Install ini jika ingin menggunakan OCR
 wget https://raw.githubusercontent.com/tesseract-ocr/tessdata_best/master/ind.traineddata
 mv ind.traineddata /data/data/com.termux/files/usr/share/tessdata 
 ````
-Jalankan ```install.sh```
+install semua package yang dibutuhkan dan jalankan
+````
+npm install && node .
+````
+note: jika npm error gunakan pnpm 
+````
+npm install -g pnpm && pnpm install 
+````
+
+atau kalian juga bisa langsung menjalankan script instalasinya dengan
+menjalankan ```install.sh```
 ````
 bash install.sh
 ````
