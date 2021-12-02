@@ -1,24 +1,24 @@
 /* WA BOTS
  * 
- * Common error selalu meminta kode QR:
- * pergi ke view-source:https://web.whatsapp.com
+ * Common error selalu meminta kode QR: 
+ * pergi ke view-source               : https: //web.whatsapp.com
  * 
  * cari tag ini 
  *
- * <meta name="binary-transparency-manifest-key" content="x.xxxx.xx"/>
+ * <meta name = "binary-transparency-manifest-key" content = "x.xxxx.xx"/>
  *
  * ganti version di kode dibawah dengan isi dari "content"
  *
  */
-const fs = require("fs");
-const messageHandler = require("./messageHandler.js");
-const http = require("http");
-const axios = require("axios");
-const qrcode = require("qrcode");
-const { WAConnection } = require("@adiwajshing/baileys");
 
-const conn = new WAConnection();
-conn.maxCachedMessages = 15;
+const fs                     = require("fs");
+const http                   = require("http");
+const axios                  = require("axios");
+const qrcode                 = require("qrcode");
+const messageHandler         = require("./messageHandler.js");
+const { WAConnection }       = require("@adiwajshing/baileys");
+const conn                   = new WAConnection();
+      conn.maxCachedMessages = 15;
 
 const server = http.createServer((req, res) => {
 	if (req.url == "/") {
