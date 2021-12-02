@@ -57,6 +57,8 @@ module.exports = async (conn, message) => {
 
 	const sender = conn.contacts[senderNumber]
 
+	console.log(sender);
+
 	let WAUser = sender?.notify || sender?.short || sender?.name || sender?.vname || conn?.user?.name
 
 	if (textMessage == '.menu') {
@@ -106,9 +108,17 @@ module.exports = async (conn, message) => {
 		d = c.substring(1);
 
 		if (pre == prefix) {
+<<<<<<< HEAD
 			if (d == null) {
 				d         = parameter.split(" ")[0];
 				parameter = parameter.split(" ").splice(1).join(" ");
+=======
+			if(!d){
+				let e = parameter.split(" ")
+				d = e[0];
+
+				parameter = parameter.split(" ").slice(1).join(" ");
+>>>>>>> b9c873c784367e6bd2a0d48dbdb227bd0651a6d2
 			}
 
 			let result = v.TextCorrection({
@@ -544,7 +554,7 @@ module.exports = async (conn, message) => {
 		case `textsticker`: 
 		case `textstiker` : {
 			if (!parameter) {
-				conn.sendMessage(senderNumber, "Inputnya salah kak :)", MessageType.text, {
+				conn.sendMessage(senderNumber, "Ups teks nya jangan sampai lupa ya kak 😋", MessageType.text, {
 					quoted: message
 				});
 				break;
@@ -572,14 +582,14 @@ module.exports = async (conn, message) => {
 			}
 
 			if (!message.message.videoMessage || message.message.videoMessage.mimetype != "video/mp4") {
-				conn.sendMessage(senderNumber, "Tidak ada video :)", MessageType.text, {
+				conn.sendMessage(senderNumber, "Gif atau videonya mana ya🤔", MessageType.text, {
 					quoted: message
 				});
 				break;
 			}
 
 			if (message.message.videoMessage.seconds > 8) {
-				conn.sendMessage(senderNumber, "Maksimal 8 detik!", MessageType.text, {
+				conn.sendMessage(senderNumber, "Hmm... maksimal 8 detik kak maaf ya 🥺", MessageType.text, {
 					quoted: message
 				});
 				break;
@@ -602,7 +612,7 @@ module.exports = async (conn, message) => {
 
 		case `giftextsticker`: {
 			if (!parameter) {
-				conn.sendMessage(senderNumber, "Inputnya salah kak :)", MessageType.text, {
+				conn.sendMessage(senderNumber,"Teks nya mana ya kak? 🤔", MessageType.text, {
 					quoted: message
 				});
 				break;
@@ -686,7 +696,7 @@ module.exports = async (conn, message) => {
 			}
 
 			if (!message.message.imageMessage || message.message.imageMessage.mimetype != "image/jpeg") {
-				conn.sendMessage(senderNumber, "Tidak ada gambar :)", MessageType.text, {
+				conn.sendMessage(senderNumber, "Aduh gambarnya mana ya kak?, pastikan ada gambarnya atau reply sebuah gambar ya kak😉", MessageType.text, {
 					quoted: message
 				});
 				break;
@@ -694,7 +704,7 @@ module.exports = async (conn, message) => {
 
 			const image    = await conn.downloadMediaMessage(message);
 			const imageb64 = image.toString('base64')
-			conn.sendMessage(senderNumber, 'Tunggu ya kak!', MessageType.text);
+			conn.sendMessage(senderNumber, 'Sedang di proses sabar ya kak.', MessageType.text);
 			const data = await axios.post('https://salisganteng.pythonanywhere.com/api/remove-bg', {
 				'api-key': 'salisheker',
 				'image'  : imageb64,
@@ -722,7 +732,7 @@ module.exports = async (conn, message) => {
 					quoted: message
 				})
 			} else {
-				var contoh = '[wrong format]\n\nformat: !bplanet <alias> <text>\ncontoh: !bplanet g kamu lagi ngapain?'
+				var contoh = 'Inputnya salah kak 😅\n\nformat: !bplanet <alias> <text>\ncontoh: !bplanet g kamu lagi ngapain?'
 				conn['sendMessage'](senderNumber, contoh, 'conversation', {
 					quoted: message
 				})
@@ -733,7 +743,7 @@ module.exports = async (conn, message) => {
 		case `lirik` : 
 		case `lyrics`: {
 			if (!parameter) {
-				conn.sendMessage(senderNumber, "lagunya mana ya kak?, silahkan diulangi ya,", MessageType.text, {
+				conn.sendMessage(senderNumber, "Kok lagunya nggak ada sih kak 🥺, silahkan diulangi ya", MessageType.text, {
 					quoted: message
 				});
 				break;
@@ -743,7 +753,7 @@ module.exports = async (conn, message) => {
 			const firstSong = searches[0]
 
 			if (!firstSong) {
-				conn.sendMessage(senderNumber, `maaf kami tidak bisa menemukan lirik dari *${parameter}* silahkan coba lagu yang lain`, MessageType.text, {
+				conn.sendMessage(senderNumber, `maaf kami tidak bisa menemukan lirik dari *${parameter}*😭  silahkan coba lagu yang lain`, MessageType.text, {
 					quoted: message
 				});
 			} else {
@@ -901,7 +911,6 @@ module.exports = async (conn, message) => {
 		case `yt`: {
 			if (!parameter) {
 				conn.sendMessage(senderNumber, "Link nya mana 😭", MessageType.text, {
-					quoted: message
 				});
 				break;
 			}

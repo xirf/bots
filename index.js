@@ -55,7 +55,16 @@ conn.on("chat-update", async (message) => {
 		await messageHandler(conn, message);
 	} catch(e) {
 		console.log("[ERROR] " + e.message);
-	//	conn.sendMessage(message.key.remoteJid, `Halo kak selamat datang di *${conn.user.name}* silahkan gunakan *!help* untuk melihat perintah yang tersedia`, "conversation", { quoted: message });
+		
+		let theError = ""
+
+		if(e.message == "Cannot read properties of undefined (reading 'Key')"){
+			theError = "Perintah tidak ditemukan";
+		}else{
+			theError = e.message;
+		}
+
+		conn.sendMessage(message.key.remoteJid, `Aduh maaf ya perintah yang kamu kirim tidak tersedia atau mungkin terjadi error😭\n\n\nError log:\u0060\u0060\u0060\n${theError}\u0060\u0060\u0060`, "conversation", { quoted: message });
 	}
 });
 
