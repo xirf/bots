@@ -108,17 +108,11 @@ module.exports = async (conn, message) => {
 		d = c.substring(1);
 
 		if (pre == prefix) {
-<<<<<<< HEAD
-			if (d == null) {
-				d         = parameter.split(" ")[0];
-				parameter = parameter.split(" ").splice(1).join(" ");
-=======
 			if(!d){
 				let e = parameter.split(" ")
 				d = e[0];
 
 				parameter = parameter.split(" ").slice(1).join(" ");
->>>>>>> b9c873c784367e6bd2a0d48dbdb227bd0651a6d2
 			}
 
 			let result = v.TextCorrection({
