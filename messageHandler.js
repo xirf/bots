@@ -35,7 +35,7 @@ const {
 
 const Client = new Genius.Client("uO-XWa9PYgZn-t7UrNW_YTDlUrNCtMq8xmCxySRRGXP4QJ0mtFwoqi1z-ywdGmXj");
 
-let v = new NLP(["text2sound", "help", "menu", "lirik", "lyrics", "contact", "translate", "stickernobg", "ytmp3", "gempa", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact", "fact", "wikipedia", "math", "bplanet", "kodebahasa", "gtts", "tts", "yt", "tl", "t"]);
+let v = new NLP(["help","gifstiker", "menu", "lirik", "lyrics", "contact",, "translate", "stickernobg", "ytmp3", "gempa", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "gtts", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact","fact",  "wikipedia", "math", "bplanet","kodebahasa", "done", "cancel" ,"yt", "tl", "t"]);
 
 module.exports = async (conn, message) => {
 	const senderNumber         = message.key.remoteJid;
@@ -570,7 +570,8 @@ module.exports = async (conn, message) => {
 			break;
 		}
 
-		case `gifsticker`: {
+		case `gifsticker`:
+		case 'gifstiker':{
 			if (quotedMessage) {
 				message.message = quotedMessage;
 			}
