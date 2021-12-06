@@ -748,6 +748,7 @@ module.exports = async (conn, message) => {
 			conn.sendMessage(senderNumber, bufferImage, MessageType.sticker, {
 				quoted: message
 			});
+			fs.unlinkSync(outputPath);
 			break;
 		}
 
