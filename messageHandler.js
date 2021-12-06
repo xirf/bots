@@ -35,11 +35,7 @@ const {
 
 const Client = new Genius.Client("uO-XWa9PYgZn-t7UrNW_YTDlUrNCtMq8xmCxySRRGXP4QJ0mtFwoqi1z-ywdGmXj");
 
-<<<<<<< HEAD
-let v = new NLP(["text2sound", "help", "menu", "lirik", "lyrics", "contact", "translate", "stickernobg", "ytmp3", "gempa", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact", "fact", "wikipedia", "math", "bplanet", "kodebahasa", "gtts", "tts", "yt", "tl", "t"]);
-=======
-let v = new NLP(["help", "menu", "lirik", "lyrics", "contact",, "translate", "stickernobg", "ytmp3", "gempa", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "gtts", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact","fact",  "wikipedia", "math", "bplanet","kodebahasa","yt", "tl", "t"]);
->>>>>>> 082b058 (additional changes)
+let v = new NLP(["help","gifstiker", "menu", "lirik", "lyrics", "contact",, "translate", "stickernobg", "ytmp3", "gempa", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "gtts", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact","fact",  "wikipedia", "math", "bplanet","kodebahasa", "done", "cancel" ,"yt", "tl", "t"]);
 
 module.exports = async (conn, message) => {
 	const senderNumber         = message.key.remoteJid;
@@ -494,17 +490,10 @@ module.exports = async (conn, message) => {
 			}
 
 			const language = parameter.split(" ")[0];
-<<<<<<< HEAD
 			const text     = parameter.split(" ").splice(1).join(" ");
 			axios({
 				url         : `https://salism3api.pythonanywhere.com/text2sound`,
 				method      : "POST",
-=======
-			const text = parameter.split(" ").splice(1).join(" ");
-			await axios({
-				url: `https://salism3api.pythonanywhere.com/text2sound`,
-				method: "POST",
->>>>>>> 082b058 (additional changes)
 				responseType: "arraybuffer",
 				data        : {
 					"languageCode": language,
@@ -581,7 +570,8 @@ module.exports = async (conn, message) => {
 			break;
 		}
 
-		case `gifsticker`: {
+		case `gifsticker`:
+		case 'gifstiker':{
 			if (quotedMessage) {
 				message.message = quotedMessage;
 			}
