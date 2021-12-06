@@ -11,8 +11,8 @@ const bahasa_planet      = require("./lib/bahasa_planet");
 const WSF                = require("wa-sticker-formatter");
 const NLP                = require("@hiyurigi/nlp")("TextCorrection");
 const prefix             = fs.readFileSync("./config/prefix.txt", "utf-8");
-const quotesList         = JSON.parse(fs.readFileSync("lib/quotes.json", "utf-8"));
 const factList           = JSON.parse(fs.readFileSync("./lib/fact.json", "utf-8"));
+const quotesList         = JSON.parse(fs.readFileSync("./lib/quotes.json", "utf-8"));
 const bufferImagesForPdf = {};
 const questionAnswer     = {};
 const inPdfInput         = [];
@@ -767,12 +767,12 @@ module.exports = async (conn, message) => {
 			fetch('https://www.bmkg.go.id/gempabumi/gempabumi-terkini.bmkg').then((res) => res.text()).then((body) => {
 				let result = scrapy.extract(body, model);
 
-				let waktu     = result[1];
-				let lintang   = result[2];
-				let bujur     = result[3];
-				let magnitudo = result[4];
-				let kedalaman = result[5];
-				let lokasi    = result[6];
+				let waktu     = result[1] || "Tidak ada data";
+				let lintang   = result[2] || "Tidak ada data";
+				let bujur     = result[3] || "Tidak ada data";
+				let magnitudo = result[4] || "Tidak ada data";
+				let kedalaman = result[5] || "Tidak ada data";
+				let lokasi    = result[6] || "Tidak ada data";
 
 				const text = `informasi gempa terbaru:\n\nWaktu: *${waktu}*\nBujur: *${bujur}*\nLintang: *${lintang}*\nMagnitudo: *${magnitudo}*\nKedalaman: *${kedalaman}*\nLokasi: *${lokasi}*`;
 
@@ -792,7 +792,7 @@ module.exports = async (conn, message) => {
 			}
 
 			const url    = 'https://www.yt-download.org/api/button/mp3/';
-			var   regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v? = ?([^#&?]*).*/;
+			const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v? = ?([^#&?]*).*/;
 
 			if (regExp.test(parameter)) {
 
@@ -817,7 +817,6 @@ module.exports = async (conn, message) => {
 							quoted: message
 						});
 					} else {
-						//start second if else
 
 						let thelink = result.link;
 						let info1   = result.quality[1].replace(/\s+/g, '') + " " + result.quality[2];
@@ -836,7 +835,6 @@ module.exports = async (conn, message) => {
 								quoted: message
 							});
 						}
-						// end second if else
 					}
 				});
 
@@ -910,7 +908,7 @@ module.exports = async (conn, message) => {
 			}
 
 			const url    = 'https://www.yt-download.org/api/button/videos/';
-			var   regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v? = ?([^#&?]*).*/;
+			const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v? = ?([^#&?]*).*/;
 
 			if (regExp.test(parameter)) {
 
@@ -935,8 +933,6 @@ module.exports = async (conn, message) => {
 							quoted: message
 						});
 					} else {
-						//start second if else
-
 						let thelink = result.link;
 						let info1   = result.quality[1].replace(/\s+/g, '') + " " + result.quality[2];
 						if (result.quality.length < 4) {
@@ -954,7 +950,6 @@ module.exports = async (conn, message) => {
 								quoted: message
 							});
 						}
-						// end second if else
 					}
 				});
 
