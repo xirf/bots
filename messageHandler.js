@@ -713,11 +713,11 @@ module.exports = async (conn, message) => {
 				break;
 			}
 
-			const image = await conn.downloadMediaMessage(message);
 			conn.sendMessage(senderNumber, 'Sedang di proses sabar ya kak. \n\ndiperikarakan sekitar 1 menit akan selesai maaf ya kak.', MessageType.text);
-
+			
+			const image	   = await conn.downloadMediaMessage(message);
 			let output     = Math.floor(Math.random()*1000000);
-			let outputPath = output + ".png";
+			let outputPath = output.toString().concat("",".png");
 
 			const settings = {
 				url            : "https://api.clickmajic.com/v1/remove-background",
@@ -748,7 +748,7 @@ module.exports = async (conn, message) => {
 			conn.sendMessage(senderNumber, bufferImage, MessageType.sticker, {
 				quoted: message
 			});
-			fs.unlinkSync(outputPath);
+		
 			break;
 		}
 
