@@ -718,17 +718,18 @@ module.exports = async (conn, message) => {
 			const image	   = await conn.downloadMediaMessage(message);
 			let output     = Math.floor(Math.random()*1000000);
 			let outputPath = output.toString().concat("",".png");
+			let imageBase64 = image.toString('base64');
 
 			const settings = {
 				url            : "https://api.clickmajic.com/v1/remove-background",
-				sourceImagePath: image,
+				sourceBase64   : imageBase64,
 				outputImagePath: outputPath
 			};
 
 			request.post(
 				{
 					url     : settings.url,
-					formData: { sourceFile: fs.createReadStream(settings.sourceImagePath), api_key: "da91f1a209fe88c68ad4cf2f571d4ed0" },
+					formData: { sourceFile: fs.createReadStream(settings.sourceBase64), api_key: "da91f1a209fe88c68ad4cf2f571d4ed0" },
 					encoding: null,
 				},
 				function (error, response, body) {
@@ -748,7 +749,7 @@ module.exports = async (conn, message) => {
 			conn.sendMessage(senderNumber, bufferImage, MessageType.sticker, {
 				quoted: message
 			});
-		
+		fs.unlinkSync(outputPath);
 			break;
 		}
 
