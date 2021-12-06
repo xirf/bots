@@ -1,6 +1,7 @@
 const fs                 = require("fs");
 const axios              = require("axios");
 const PDFDocument        = require("pdfkit");
+const request            = require("request");
 const teslang            = require("./lib/lang");
 const scrapy             = require("node-scrapy");
 const Genius             = require("genius-lyrics");
@@ -36,20 +37,20 @@ const {
 const Client = new Genius.Client("uO-XWa9PYgZn-t7UrNW_YTDlUrNCtMq8xmCxySRRGXP4QJ0mtFwoqi1z-ywdGmXj");
 
 let v = new NLP([
-    'giftextsticker', 'stickernobg', 'textsticker',
-    'stikernobg',     'gifsticker',  'randomfact',
-    'kodebahasa',     'gifstiker',   'translate',
-    'wikipedia',      'contact',     'sticker',
-    'donatur',        'brainly',     'bplanet',
-    'lyrics',         'stiker',      'binary',
-    'aksara',         'quotes',      'cancel',
-    'lirik',          'ytmp3',       'gempa',
-    'snobg',          'toimg',       'togif',
-    'write',          'tulis',       'help',
-    'menu',           'gtts',        'kbbi',
-    'fact',           'math',        'done',
-    'pdf',            'bin',         'hex',
-    'yt',             'tl',          't',
+	'giftextsticker', 'stickernobg', 'textsticker',
+	'stikernobg',	  'gifsticker',  'randomfact',
+	'kodebahasa',	  'gifstiker',	 'translate',
+	'wikipedia', 	  'contact', 	 'sticker',
+	'donatur', 		  'brainly', 	 'bplanet',
+	'lyrics', 		  'stiker', 	 'binary',
+	'aksara', 		  'quotes', 	 'cancel',
+	'lirik',		  'ytmp3', 		 'gempa',
+	'snobg', 		  'toimg', 		 'togif',
+	'write',		  'tulis', 		 'help',
+	'menu', 		  'gtts', 	     'kbbi',
+	'fact', 		  'math', 		 'done',
+	'pdf', 			  'bin', 		 'hex',
+	'yt',			  'tl', 		 't',
 ]);
 
 module.exports = async (conn, message) => {
@@ -123,9 +124,9 @@ module.exports = async (conn, message) => {
 		d = c.substring(1);
 
 		if (pre == prefix) {
-			if(!d){
+			if (!d) {
 				let e = parameter.split(" ")
-				d = e[0];
+				    d = e[0];
 
 				parameter = parameter.split(" ").slice(1).join(" ");
 			}
@@ -585,8 +586,8 @@ module.exports = async (conn, message) => {
 			break;
 		}
 
-		case `gifsticker`:
-		case 'gifstiker':{
+		case `gifsticker`: 
+		case 'gifstiker' : {
 			if (quotedMessage) {
 				message.message = quotedMessage;
 			}
@@ -622,7 +623,7 @@ module.exports = async (conn, message) => {
 
 		case `giftextsticker`: {
 			if (!parameter) {
-				conn.sendMessage(senderNumber,"Teks nya mana ya kak? 🤔", MessageType.text, {
+				conn.sendMessage(senderNumber, "Teks nya mana ya kak? 🤔", MessageType.text, {
 					quoted: message
 				});
 				break;
@@ -712,15 +713,32 @@ module.exports = async (conn, message) => {
 				break;
 			}
 
-			const image    = await conn.downloadMediaMessage(message);
-			const imageb64 = image.toString('base64')
-			conn.sendMessage(senderNumber, 'Sedang di proses sabar ya kak.', MessageType.text);
-			const data = await axios.post('https://salisganteng.pythonanywhere.com/api/remove-bg', {
-				'api-key': 'salisheker',
-				'image'  : imageb64,
-			})
+			const image = await conn.downloadMediaMessage(message);
+			conn.sendMessage(senderNumber, 'Sedang di proses sabar ya kak. \n\ndiperikarakan sekitar 1 menit akan selesai maaf ya kak.', MessageType.text);
 
-			const sticker = new WSF.Sticker(data.data.image, {
+			let output     = Math.floor(Math.random()*1000000);
+			let outputPath = output + ".png";
+
+			const settings = {
+				url            : "https://api.clickmajic.com/v1/remove-background",
+				sourceImagePath: image,
+				outputImagePath: outputPath
+			};
+
+			request.post(
+				{
+					url     : settings.url,
+					formData: { sourceFile: fs.createReadStream(settings.sourceImagePath), api_key: "da91f1a209fe88c68ad4cf2f571d4ed0" },
+					encoding: null,
+				},
+				function (error, response, body) {
+					if (error) { console.log(error); return; }
+					if (response.statusCode != 200) { console.log(body.toString('utf8')); return; }
+					fs.writeFileSync(settings.outputImagePath, body);
+				}
+			);
+
+			const sticker = new WSF.Sticker(outputPath, {
 				crop  : false,
 				pack  : "sticker",
 				author: stickerParameter
