@@ -35,7 +35,22 @@ const {
 
 const Client = new Genius.Client("uO-XWa9PYgZn-t7UrNW_YTDlUrNCtMq8xmCxySRRGXP4QJ0mtFwoqi1z-ywdGmXj");
 
-let v = new NLP(["help","gifstiker", "menu", "lirik", "lyrics", "contact",, "translate", "stickernobg", "ytmp3", "gempa", "stikernobg", "stiker", "sticker", "snobg", "pdf", "bin", "gtts", "binary", "hex", "aksara", "toimg", "togif", "textsticker", "donatur", "giftextsticker", "gifsticker", "write", "tulis", "brainly", "quotes", "kbbi", "randomfact","fact",  "wikipedia", "math", "bplanet","kodebahasa", "done", "cancel" ,"yt", "tl", "t"]);
+let v = new NLP([
+    'giftextsticker', 'stickernobg', 'textsticker',
+    'stikernobg',     'gifsticker',  'randomfact',
+    'kodebahasa',     'gifstiker',   'translate',
+    'wikipedia',      'contact',     'sticker',
+    'donatur',        'brainly',     'bplanet',
+    'lyrics',         'stiker',      'binary',
+    'aksara',         'quotes',      'cancel',
+    'lirik',          'ytmp3',       'gempa',
+    'snobg',          'toimg',       'togif',
+    'write',          'tulis',       'help',
+    'menu',           'gtts',        'kbbi',
+    'fact',           'math',        'done',
+    'pdf',            'bin',         'hex',
+    'yt',             'tl',          't',
+]);
 
 module.exports = async (conn, message) => {
 	const senderNumber         = message.key.remoteJid;
