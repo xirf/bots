@@ -186,17 +186,63 @@ module.exports = async (conn, message) => {
 			const bufferImage = await conn.downloadMediaMessage(message);
 			bufferImagesForPdf[senderNumber].push(bufferImage);
 
-			conn.sendMessage(senderNumber, `[${bufferImagesForPdf[senderNumber].length}] Sukses menambah gambar!, kirim *${prefix}done* jika selesai, *!cancel* jika ingin membatalkan`, MessageType.text, {
+			const buttons = [{
+				buttonId  : 'id1',
+				buttonText: {
+					displayText: '!cancel'
+				},
+				type: 1
+			},
+			{
+				buttonId  : 'id2',
+				buttonText: {
+					displayText: '!done'
+				},
+				type: 1
+			}
+			]
+	
+			const buttonMessage = {
+				contentText: `Yay ${bufferImagesForPdf[senderNumber].length} gambar telah sukses ditambahkan\n\nKirim *${prefix}done* jika selesai, *!cancel* jika ingin membatalkan`,
+				footerText : `${conn.user.name} ${prefix}pdf`,
+				buttons    : buttons,
+				headerType : 1
+			}
+	
+			conn.sendMessage(senderNumber, buttonMessage, MessageType.buttonsMessage, {
 				quoted: message
-			})
+			});
 
 		} else {
-			conn.sendMessage(senderNumber, `Itu bukan gambar! kirim *${prefix}done* jika selesai, *${prefix}cancel* jika ingin membatalkan`, MessageType.text, {
+			const buttons = [{
+				buttonId  : 'id1',
+				buttonText: {
+					displayText: '!cancel'
+				},
+				type: 1
+			},
+			{
+				buttonId  : 'id2',
+				buttonText: {
+					displayText: '!done'
+				},
+				type: 1
+			}
+			]
+	
+			const buttonMessage = {
+				contentText:  `Ups maaf kirim gambar ya kak jangan stiker atau text 😊\n\nKirim *${prefix}done* jika selesai, *!cancel* jika ingin membatalkan`,
+				footerText : `${conn.user.name} ${prefix}pdf`,
+				buttons    : buttons,
+				headerType : 1
+			}
+	
+			conn.sendMessage(senderNumber, buttonMessage, MessageType.buttonsMessage, {
 				quoted: message
-			})
-		}
+			});
 
-		return;
+			return;
+		}
 	}
 
 	switch (command) {
@@ -355,7 +401,7 @@ module.exports = async (conn, message) => {
 			break;
 		}
 
-		case `${prefix}toimg`: {
+		case "toimg": {
 			if (!quotedMessage || !quotedMessage.stickerMessage || quotedMessage.stickerMessage.mimetype != "image/webp") {
 				conn.sendMessage(senderNumber, "Harus me-reply sticker :)", MessageType.text, {
 					quoted: message
@@ -422,14 +468,14 @@ module.exports = async (conn, message) => {
 
 		case `pdf`: {
 			if (message.participant) {
-				conn.sendMessage(senderNumber, "Demi menghindari spam fitur ini hanya tersedia di Private Chat", MessageType.text, {
+				conn.sendMessage(senderNumber, "Maaf kak, demi menghindari spam fitur ini hanya tersedia di Private Chat", MessageType.text, {
 					quoted: message
 				});
 				break;
 			}
 
 			if (imageMessage) {
-				conn.sendMessage(senderNumber, "Kirim tanpa gambar!", MessageType.text, {
+				conn.sendMessage(senderNumber, "Ups kirim tanpa gambar ya kak", MessageType.text, {
 					quoted: message
 				});
 				break;
@@ -715,21 +761,20 @@ module.exports = async (conn, message) => {
 
 			conn.sendMessage(senderNumber, 'Sedang di proses sabar ya kak. \n\ndiperikarakan sekitar 1 menit akan selesai maaf ya kak.', MessageType.text);
 			
-			const image	   = await conn.downloadMediaMessage(message);
+			const imagePath= await conn.downloadAndSaveMediaMessage(message);
 			let output     = Math.floor(Math.random()*1000000);
 			let outputPath = output.toString().concat("",".png");
-			let imageBase64 = image.toString('base64');
 
 			const settings = {
 				url            : "https://api.clickmajic.com/v1/remove-background",
-				sourceBase64   : imageBase64,
+				sourceImagePath: imagePath,
 				outputImagePath: outputPath
 			};
 
 			request.post(
 				{
 					url     : settings.url,
-					formData: { sourceFile: fs.createReadStream(settings.sourceBase64), api_key: "da91f1a209fe88c68ad4cf2f571d4ed0" },
+					formData: { sourceFile: fs.createReadStream(settings.sourceImagePath), api_key: "da91f1a209fe88c68ad4cf2f571d4ed0" },
 					encoding: null,
 				},
 				function (error, response, body) {
@@ -749,7 +794,9 @@ module.exports = async (conn, message) => {
 			conn.sendMessage(senderNumber, bufferImage, MessageType.sticker, {
 				quoted: message
 			});
-		fs.unlinkSync(outputPath);
+
+			fs.unlinkSync(imagePath)
+			fs.unlinkSync(outputPath);
 			break;
 		}
 
