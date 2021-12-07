@@ -5,7 +5,7 @@ const request            = require("request");
 const teslang            = require("./lib/lang");
 const scrapy             = require("node-scrapy");
 const Genius             = require("genius-lyrics");
-const brainly            = require("brainly-scraper");
+const { Brainly }        = require("brainly-scraper-v2");
 const translate          = require("translate-google");
 const webpConverter      = require("./lib/webpconverter");
 const bahasa_planet      = require("./lib/bahasa_planet");
@@ -17,7 +17,7 @@ const quotesList         = JSON.parse(fs.readFileSync("./lib/quotes.json", "utf-
 const bufferImagesForPdf = {};
 const questionAnswer     = {};
 const inPdfInput         = [];
-
+const brain = new Brainly("id");
 const fetch = (...args) => import('node-fetch').then(({
 	default: fetch
 }) => fetch(...args));
@@ -492,14 +492,14 @@ module.exports = async (conn, message) => {
 
 		case `brainly`: {
 			if (!parameter) {
-				conn.sendMessage(senderNumber, "Inputnya salah kak :)", MessageType.text, {
+				conn.sendMessage(senderNumber, "Mau cari apa kak?, jangan lupa ya apa yang mau dicari ditulis juga", MessageType.text, {
 					quoted: message
 				});
 				break;
 			}
 
-			const data = await brainly(parameter);
-			if (data.succses && data.data.length <= 0) {
+			const data = await brain.searchWithMT("id", parameter).then(console.log).catch(console.error);
+		/*	if (data.succses && data.data.length <= 0) {
 				conn.sendMessage(senderNumber, "Pertanyaan tidak ditemukan :(", MessageType.text, {
 					quoted: message
 				})
@@ -511,7 +511,8 @@ module.exports = async (conn, message) => {
 						quoted: message
 					})
 				}
-			}
+				
+			}*/
 			break;
 		}
 

@@ -22,7 +22,7 @@
     "@hiyurigi/nlp": "^2.0.0-alpha.3",
     "@sajenid/aksara.js": "^1.0.0-beta.6",
     "axios": "^0.21.1",
-    "brainly-scraper": "^1.0.3",
+    "brainly-scraper-v2": "^2.0.9",
     "cheerio": "^1.0.0-rc.10",
     "file-type": "16.2.0",
     "genius-lyrics": "^4.3.4",
@@ -32,6 +32,7 @@
     "pdfkit": "^0.11.0",
     "qrcode": "^1.4.4",
     "qs": "^6.10.0",
+    "request": "^2.88.2",
     "socket.io": "^4.0.1",
     "translate-google": "^1.5.0",
     "wa-sticker-formatter": "2.8.0"
