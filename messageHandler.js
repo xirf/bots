@@ -41,16 +41,16 @@ let v = new NLP([
 	'stikernobg',	  'gifsticker',  'randomfact',
 	'kodebahasa',	  'gifstiker',	 'translate',
 	'wikipedia', 	  'contact', 	 'sticker',
-	'donatur', 		  'brainly', 	 'bplanet',
-	'lyrics', 		  'stiker', 	 'binary',
-	'aksara', 		  'quotes', 	 'cancel',
-	'lirik',		  'ytmp3', 		 'gempa',
-	'snobg', 		  'toimg', 		 'togif',
-	'write',		  'tulis', 		 'help',
-	'menu', 		  'gtts', 	     'kbbi',
-	'fact', 		  'math', 		 'done',
-	'pdf', 			  'bin', 		 'hex',
-	'yt',			  'tl', 		 't',
+	'donatur', 	  'brainly', 	 'bplanet',
+	'lyrics', 	  'stiker', 	 'binary',
+	'aksara', 	  'quotes', 	 'cancel',
+	'lirik',	  'ytmp3', 	 'gempa',
+	'snobg', 	  'toimg', 	 'togif',
+	'write',	  'tulis', 	 'help',
+	'menu', 	  'gtts', 	 'kbbi',
+	'fact', 	  'math', 	 'done',
+	'pdf', 		  'bin', 	 'hex',
+	'yt',		  'tl', 	 't',
 ]);
 
 module.exports = async (conn, message) => {
@@ -118,10 +118,8 @@ module.exports = async (conn, message) => {
 		b         += a[0].split(" ").slice(1).join(" ");
 		b         += a.slice(1).join("\n")
 		parameter  = b.trim();
-
-		pre = c.charAt(0);
-
-		d = c.substring(1);
+		pre 	   = c.charAt(0);
+		d  	   = c.substring(1);	
 
 		if (pre == prefix) {
 			if (!d) {
@@ -131,12 +129,16 @@ module.exports = async (conn, message) => {
 				parameter = parameter.split(" ").slice(1).join(" ");
 			}
 
-			let result = v.TextCorrection({
-				Needle      : d,
-				Threshold   : 0.7,
-				NgramsLength: 1
-			});
-			command = result[0].Key;
+			if(d.toLowerCase == "routes"){
+				command = "quotes";
+			}else{
+				let result = v.TextCorrection({
+					Needle      : d,
+					Threshold   : 0.7,
+					NgramsLength: 1
+				});
+				command = result[0].Key;
+			}
 		}
 
 	}
