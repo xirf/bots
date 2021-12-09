@@ -860,7 +860,7 @@ module.exports = async (conn, message) => {
 					quoted: message
 				});
 
-				var match = parameter.match(regExp);
+				var match = parameter.match(ytregex);
 				var result = (match && match[7].length == 11) ? match[7] : false;
 				var links = url + result;
 
@@ -870,7 +870,7 @@ module.exports = async (conn, message) => {
 						quoted: message
 					});
 
-					var match = parameter.match(regExp);
+					var match = parameter.match(ytregex);
 					var result = (match && match[7].length == 11) ? match[7] : false;
 					var links = 'https://freerestapi.herokuapp.com/api/ytmp3?url=https://www.youtube.com/watch?v=' + result;
 
