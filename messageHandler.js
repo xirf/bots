@@ -876,7 +876,7 @@ module.exports = async (conn, message) => {
 			}
 
 			const url    = 'https://www.yt-download.org/api/button/mp3/';
-			const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v? = ?([^#&?]*).*/;
+			const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
 
 			if (regExp.test(parameter)) {
 
@@ -992,7 +992,7 @@ module.exports = async (conn, message) => {
 			}
 
 			const url    = 'https://www.yt-download.org/api/button/videos/';
-			const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v? = ?([^#&?]*).*/;
+			const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
 
 			if (regExp.test(parameter)) {
 
