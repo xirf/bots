@@ -51,8 +51,8 @@ module.exports = async (conn, message) => {
 	const stickerMessage       = message.message.stickerMessage;
 	const extendedTextMessage  = message.message.extendedTextMessage;
 	const buttons              = message.message.buttonsResponseMessage
-	const quotedMessage        = quotedMessageContext && quotedMessageContext.quotedMessage;
 	const quotedMessageContext = extendedTextMessage && extendedTextMessage.contextInfo && extendedTextMessage.contextInfo;
+	const quotedMessage        = quotedMessageContext && quotedMessageContext.quotedMessage;
 
 	let buttonMessages;
 	if (buttons != undefined) {
@@ -60,12 +60,8 @@ module.exports = async (conn, message) => {
 	}
 
 	const textMessage = message.message.conversation || message.message.extendedTextMessage && message.message.extendedTextMessage.text || imageMessage && imageMessage.caption || videoMessage && videoMessage.caption || buttonMessages
-
-	const sender = conn.contacts[senderNumber]
-
-	console.log(sender);
-
-	let WAUser = sender?.notify || sender?.short || sender?.name || sender?.vname || conn?.user?.name
+	const sender 	  = conn.contacts[senderNumber]
+	let WAUser 		  = sender?.notify || sender?.short || sender?.name || sender?.vname || conn?.user?.name
 
 	if (textMessage == '.menu') {
 
