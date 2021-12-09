@@ -1,22 +1,22 @@
-const fs                 = require("fs");
-const axios              = require("axios");
-const PDFDocument        = require("pdfkit");
-const request            = require("request");
-const teslang            = require("./lib/lang");
-const scrapy             = require("node-scrapy");
-const Genius             = require("genius-lyrics");
-const { Brainly }        = require("brainly-scraper-v2");
-const translate          = require("translate-google");
-const webpConverter      = require("./lib/webpconverter");
-const bahasa_planet      = require("./lib/bahasa_planet");
-const WSF                = require("wa-sticker-formatter");
-const NLP                = require("@hiyurigi/nlp")("TextCorrection");
-const prefix             = fs.readFileSync("./config/prefix.txt", "utf-8");
-const factList           = JSON.parse(fs.readFileSync("./lib/fact.json", "utf-8"));
-const quotesList         = JSON.parse(fs.readFileSync("./lib/quotes.json", "utf-8"));
+const fs = require("fs");
+const axios = require("axios");
+const PDFDocument = require("pdfkit");
+const request = require("request");
+const teslang = require("./lib/lang");
+const scrapy = require("node-scrapy");
+const Genius = require("genius-lyrics");
+const { Brainly } = require("brainly-scraper-v2");
+const translate = require("translate-google");
+const webpConverter = require("./lib/webpconverter");
+const bahasa_planet = require("./lib/bahasa_planet");
+const WSF = require("wa-sticker-formatter");
+const NLP = require("@hiyurigi/nlp")("TextCorrection");
+const prefix = fs.readFileSync("./config/prefix.txt", "utf-8");
+const factList = JSON.parse(fs.readFileSync("./lib/fact.json", "utf-8"));
+const quotesList = JSON.parse(fs.readFileSync("./lib/quotes.json", "utf-8"));
 const bufferImagesForPdf = {};
-const questionAnswer     = {};
-const inPdfInput         = [];
+const questionAnswer = {};
+const inPdfInput = [];
 const brain = new Brainly("id");
 const fetch = (...args) => import('node-fetch').then(({
 	default: fetch
@@ -34,33 +34,34 @@ const {
 	isNull
 } = require("util");
 
+const ytregex = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
 const Client = new Genius.Client("uO-XWa9PYgZn-t7UrNW_YTDlUrNCtMq8xmCxySRRGXP4QJ0mtFwoqi1z-ywdGmXj");
 
 let v = new NLP([
 	'giftextsticker', 'stickernobg', 'textsticker',
-	'stikernobg',	  'gifsticker',  'randomfact',
-	'kodebahasa',	  'gifstiker',	 'translate',
-	'wikipedia', 	  'contact', 	 'sticker',
-	'donatur', 	  'brainly', 	 'bplanet',
-	'lyrics', 	  'stiker', 	 'binary',
-	'aksara', 	  'quotes', 	 'cancel',
-	'lirik',	  'ytmp3', 	 'gempa',
-	'snobg', 	  'toimg', 	 'togif',
-	'write',	  'tulis', 	 'help',
-	'menu', 	  'gtts', 	 'kbbi',
-	'fact', 	  'math', 	 'done',
-	'pdf', 		  'bin', 	 'hex',
-	'yt',		  'tl', 	 't',
+	'stikernobg', 'gifsticker', 'randomfact',
+	'kodebahasa', 'gifstiker', 'translate',
+	'wikipedia', 'contact', 'sticker',
+	'donatur', 'brainly', 'bplanet',
+	'lyrics', 'stiker', 'binary',
+	'aksara', 'quotes', 'cancel',
+	'lirik', 'ytmp3', 'gempa',
+	'snobg', 'toimg', 'togif',
+	'write', 'tulis', 'help',
+	'menu', 'gtts', 'kbbi',
+	'fact', 'math', 'done',
+	'pdf', 'bin', 'hex',
+	'yt', 'tl', 't',
 ]);
 
 module.exports = async (conn, message) => {
-	const senderNumber         = message.key.remoteJid;
-	const imageMessage         = message.message.imageMessage;
-	const videoMessage         = message.message.videoMessage;
-	const stickerMessage       = message.message.stickerMessage;
-	const extendedTextMessage  = message.message.extendedTextMessage;
+	const senderNumber = message.key.remoteJid;
+	const imageMessage = message.message.imageMessage;
+	const videoMessage = message.message.videoMessage;
+	const stickerMessage = message.message.stickerMessage;
+	const extendedTextMessage = message.message.extendedTextMessage;
 	const quotedMessageContext = extendedTextMessage && extendedTextMessage.contextInfo && extendedTextMessage.contextInfo;
-	const quotedMessage        = quotedMessageContext && quotedMessageContext.quotedMessage;
+	const quotedMessage = quotedMessageContext && quotedMessageContext.quotedMessage;
 
 	let buttons = message.message.buttonsResponseMessage
 
@@ -80,14 +81,14 @@ module.exports = async (conn, message) => {
 	if (textMessage == '.menu') {
 
 		const buttons = [{
-			buttonId  : 'id1',
+			buttonId: 'id1',
 			buttonText: {
 				displayText: '!help'
 			},
 			type: 1
 		},
 		{
-			buttonId  : 'id2',
+			buttonId: 'id2',
 			buttonText: {
 				displayText: '!contact'
 			},
@@ -97,9 +98,9 @@ module.exports = async (conn, message) => {
 
 		const buttonMessage = {
 			contentText: `Halo selamat datang di *${conn.user.name}* silahkan gunakan *${prefix}help* untuk melihat perintah yang tersedia 😆`,
-			footerText : 'kamu juga bisa menekan tombol ini',
-			buttons    : buttons,
-			headerType : 1
+			footerText: 'kamu juga bisa menekan tombol ini',
+			buttons: buttons,
+			headerType: 1
 		}
 
 		conn.sendMessage(senderNumber, buttonMessage, MessageType.buttonsMessage, {
@@ -115,26 +116,26 @@ module.exports = async (conn, message) => {
 
 		c = a[0].split(" ")[0]
 
-		b         += a[0].split(" ").slice(1).join(" ");
-		b         += a.slice(1).join("\n")
-		parameter  = b.trim();
-		pre 	   = c.charAt(0);
-		d  	   = c.substring(1);	
+		b += a[0].split(" ").slice(1).join(" ");
+		b += a.slice(1).join("\n")
+		parameter = b.trim();
+		pre = c.charAt(0);
+		d = c.substring(1);
 
 		if (pre == prefix) {
 			if (!d) {
 				let e = parameter.split(" ")
-				    d = e[0];
+				d = e[0];
 
 				parameter = parameter.split(" ").slice(1).join(" ");
 			}
 
-			if(d.toLowerCase() == "routes"){
+			if (d.toLowerCase() == "routes") {
 				command = "quotes";
-			}else{
+			} else {
 				let result = v.TextCorrection({
-					Needle      : d,
-					Threshold   : 0.7,
+					Needle: d,
+					Threshold: 0.7,
 					NgramsLength: 1
 				});
 				command = result[0].Key;
@@ -146,13 +147,30 @@ module.exports = async (conn, message) => {
 	const stickerParameter = parameter || WAUser
 
 
-	if (textMessage.toString().toLowerCase() == "beb"){
-		conn.sendMessage(senderNumber, "iya sayang, kenapa?", MessageType.text, {quoted: message});
+	if (textMessage.toString().toLowerCase() == "beb") {
+		conn.sendMessage(senderNumber, "iya sayang, kenapa?", MessageType.text, { quoted: message });
 	}
 
 
 	if (inPdfInput.includes(senderNumber)) {
 		if (stickerMessage) return;
+
+		const buttons = [{
+			buttonId: 'id1',
+			buttonText: {
+				displayText: '!cancel'
+			},
+			type: 1
+		},
+		{
+			buttonId: 'id2',
+			buttonText: {
+				displayText: '!done'
+			},
+			type: 1
+		}
+		]
+
 		if (command == `done` || bufferImagesForPdf[senderNumber].length > 19) {
 			const pdf = new PDFDocument({
 				autoFirstPage: false
@@ -167,7 +185,7 @@ module.exports = async (conn, message) => {
 			}
 
 			const pathFile = ".temp/" + Math.floor(Math.random() * 1000000 + 1) + ".pdf";
-			const file     = fs.createWriteStream(pathFile);
+			const file = fs.createWriteStream(pathFile);
 			pdf.pipe(file)
 			pdf.end()
 
@@ -176,7 +194,7 @@ module.exports = async (conn, message) => {
 				conn.sendMessage(senderNumber, file, MessageType.document, {
 					mimetype: Mimetype.pdf,
 					filename: Math.floor(Math.random() * 1000000) + ".pdf",
-					quoted  : message
+					quoted: message
 				});
 				fs.unlinkSync(pathFile);
 				inPdfInput.splice(inPdfInput.indexOf(senderNumber), 1);
@@ -194,57 +212,26 @@ module.exports = async (conn, message) => {
 			const bufferImage = await conn.downloadMediaMessage(message);
 			bufferImagesForPdf[senderNumber].push(bufferImage);
 
-			const buttons = [{
-				buttonId  : 'id1',
-				buttonText: {
-					displayText: '!cancel'
-				},
-				type: 1
-			},
-			{
-				buttonId  : 'id2',
-				buttonText: {
-					displayText: '!done'
-				},
-				type: 1
-			}
-			]
-	
 			const buttonMessage = {
 				contentText: `Yay ${bufferImagesForPdf[senderNumber].length} gambar telah sukses ditambahkan\n\nKirim *${prefix}done* jika selesai, *!cancel* jika ingin membatalkan`,
-				footerText : `${conn.user.name} ${prefix}pdf`,
-				buttons    : buttons,
-				headerType : 1
+				footerText: `${conn.user.name} ${prefix}pdf`,
+				buttons: buttons,
+				headerType: 1
 			}
-	
+
 			conn.sendMessage(senderNumber, buttonMessage, MessageType.buttonsMessage, {
 				quoted: message
 			});
 
 		} else {
-			const buttons = [{
-				buttonId  : 'id1',
-				buttonText: {
-					displayText: '!cancel'
-				},
-				type: 1
-			},
-			{
-				buttonId  : 'id2',
-				buttonText: {
-					displayText: '!done'
-				},
-				type: 1
-			}
-			]
-	
+
 			const buttonMessage = {
-				contentText:  `Ups maaf kirim gambar ya kak jangan stiker atau text 😊\n\nKirim *${prefix}done* jika selesai, *!cancel* jika ingin membatalkan`,
-				footerText : `${conn.user.name} ${prefix}pdf`,
-				buttons    : buttons,
-				headerType : 1
+				contentText: `Ups maaf kirim gambar ya kak jangan stiker atau text 😊\n\nKirim *${prefix}done* jika selesai, *!cancel* jika ingin membatalkan`,
+				footerText: `${conn.user.name} ${prefix}pdf`,
+				buttons: buttons,
+				headerType: 1
 			}
-	
+
 			conn.sendMessage(senderNumber, buttonMessage, MessageType.buttonsMessage, {
 				quoted: message
 			});
@@ -257,8 +244,8 @@ module.exports = async (conn, message) => {
 
 		case `t`: {
 			let result = v.TextCorrection({
-				Needle      : parameter,
-				Threshold   : 0.4,
+				Needle: parameter,
+				Threshold: 0.4,
 				NgramsLength: 1
 			});
 			const text = result[0].Key;
@@ -269,9 +256,8 @@ module.exports = async (conn, message) => {
 			break;
 		}
 
-
-		case `binary`: 
-		case `bin`   : {
+		case `binary`:
+		case `bin`: {
 			const bin = parameter.split('').map(function (char) {
 				return char.charCodeAt(0).toString(2);
 			}).join(' ');
@@ -296,7 +282,7 @@ module.exports = async (conn, message) => {
 			break;
 		}
 
-		case `help`: 
+		case `help`:
 		case `menu`: {
 			const text = fs.readFileSync("./config/menu.txt", 'utf-8');
 
@@ -322,10 +308,10 @@ module.exports = async (conn, message) => {
 		}
 
 		case `kbbi`: {
-			const url   = 'https://kbbi.kemdikbud.go.id/entri/';
+			const url = 'https://kbbi.kemdikbud.go.id/entri/';
 			const model = {
-				lema : 'h2',
-				arti : ['ol li', 'ul.adjusted-par'],
+				lema: 'h2',
+				arti: ['ol li', 'ul.adjusted-par'],
 				makna: 'ul.adjusted-par li'
 			}
 
@@ -364,6 +350,7 @@ module.exports = async (conn, message) => {
 			});
 			break;
 		}
+
 		case `aksara`: {
 			if (quotedMessage) {
 				message.message = quotedMessage;
@@ -374,15 +361,16 @@ module.exports = async (conn, message) => {
 				});
 				break;
 			}
-			let   wada = LatinKeAksara(parameter);
+			let wada = LatinKeAksara(parameter);
 			const text = wada;
 			conn.sendMessage(senderNumber, text, MessageType.text, {
 				quoted: message
 			});
 			break;
 		}
-		case `sticker`: 
-		case `stiker` : {
+
+		case `sticker`:
+		case `stiker`: {
 			if (quotedMessage) {
 				message.message = quotedMessage;
 			}
@@ -395,9 +383,9 @@ module.exports = async (conn, message) => {
 			}
 
 			const imagePath = await conn.downloadAndSaveMediaMessage(message, Math.floor(Math.random() * 1000000));
-			const sticker   = new WSF.Sticker("./" + imagePath, {
-				crop  : false,
-				pack  : "Stiker",
+			const sticker = new WSF.Sticker("./" + imagePath, {
+				crop: false,
+				pack: "Stiker",
 				author: stickerParameter
 			});
 			await sticker.build();
@@ -411,45 +399,44 @@ module.exports = async (conn, message) => {
 
 		case "toimg": {
 			if (!quotedMessage || !quotedMessage.stickerMessage || quotedMessage.stickerMessage.mimetype != "image/webp") {
-				conn.sendMessage(senderNumber, "Harus me-reply sticker :)", MessageType.text, {
+				conn.sendMessage(senderNumber, "Ups, stikernya mana ya kak?", MessageType.text, {
 					quoted: message
 				});
 				break;
 			}
 
-			      message.message = quotedMessage;
-			const webpImage       = await conn.downloadMediaMessage(message);
-			const jpgImage        = await webpConverter.webpToJpg(webpImage);
+			message.message = quotedMessage;
+			const webpImage = await conn.downloadMediaMessage(message);
+			const jpgImage = await webpConverter.webpToJpg(webpImage);
 			conn.sendMessage(senderNumber, jpgImage, MessageType.image, {
-				quoted : message,
-				caption: "Ini gambarnya kak!"
+				quoted: message,
+				caption: "Ini kak gamabrnya >///<"
 			});
 			break;
 		}
 
-
 		case `togif`: {
 			if (!quotedMessage || !quotedMessage.stickerMessage || quotedMessage.stickerMessage.mimetype != "image/webp") {
-				conn.sendMessage(senderNumber, "Harus me-reply sticker :)", MessageType.text, {
+				conn.sendMessage(senderNumber, "Ups, Gamabrnya mana ya kak?", MessageType.text, {
 					quoted: message
 				});
 				break;
 			}
 
-			      message.message = quotedMessage;
-			const webpImage       = await conn.downloadMediaMessage(message);
-			const video           = await webpConverter.webpToVideo(webpImage);
+			message.message = quotedMessage;
+			const webpImage = await conn.downloadMediaMessage(message);
+			const video = await webpConverter.webpToVideo(webpImage);
 			conn.sendMessage(senderNumber, video, MessageType.video, {
-				quoted  : message,
+				quoted: message,
 				mimetype: Mimetype.gif
 			});
 			break;
 		}
 
-		case `write`: 
+		case `write`:
 		case `nulis`: {
 			if (!parameter) {
-				conn.sendMessage(senderNumber, "Tidak ada text :)", MessageType.text, {
+				conn.sendMessage(senderNumber, "Ups, teks nya mana ya kak?", MessageType.text, {
 					quoted: message
 				});
 				break;
@@ -462,8 +449,8 @@ module.exports = async (conn, message) => {
 
 			for (const imageUrl of imagesUrl) {
 				const response = await axios({
-					url         : imageUrl,
-					method      : "GET",
+					url: imageUrl,
+					method: "GET",
 					responseType: "arraybuffer",
 				});
 				const image = Buffer.from(response.data, "binary");
@@ -506,35 +493,33 @@ module.exports = async (conn, message) => {
 				break;
 			}
 
-			const data = await brain.searchWithMT("id", parameter).then(console.log).catch(console.error);
-		/*	if (data.succses && data.data.length <= 0) {
-				conn.sendMessage(senderNumber, "Pertanyaan tidak ditemukan :(", MessageType.text, {
-					quoted: message
-				})
+			conn.sendMessage(senderNumber, "Sedang mencari jawabannya 🤨🔎")
 
-			} else if (data.success) {
-				for (const question of data.data.slice(0, 3)) {
-					const text = `*Pertanyaan:* ${question.pertanyaan.trim()}\n\n*Jawaban*: ${question.jawaban[0].text.replace("Jawaban:", "").trim()}`
-					await conn.sendMessage(senderNumber, text, MessageType.text, {
-						quoted: message
-					})
+			brain.searchWithMT("id", "telegram").then(res => {
+				for (let i = 0; i < res.length; i++) {
+					let soal = res[i].question.content
+					let answer = res[i].answers[0].content
+					console.log("\n=========\n" + soal);
+					conn.sendMessage(senderNumber, `soal = ${soal}\n\nJawaban: ${answer}`, MessageType.text, { quoted: message });
 				}
-				
-			}*/
+			}).catch(err => {
+				conn.sendMessage(senderNumber, "Maaf terjadi kesalahan kak Y^Y)");
+			});
+
 			break;
 		}
 
 		case `quotes`: {
 			const quotes = quotesList[Math.floor(Math.random() * quotesList.length)];
-			const text   = `_"${quotes.quote}"_\n\n - ${quotes.by}`;
+			const text = `_"${quotes.quote}"_\n\n - ${quotes.by}`;
 			conn.sendMessage(senderNumber, text, MessageType.text, {
 				quoted: message
 			});
 			break;
 		}
 
-		case `randomfact`: 
-		case `fact`      : {
+		case `randomfact`:
+		case `fact`: {
 			const fact = factList[Math.floor(Math.random() * factList.length)];
 			const text = `_${fact}_`
 			conn.sendMessage(senderNumber, text, MessageType.text, {
@@ -543,8 +528,8 @@ module.exports = async (conn, message) => {
 			break;
 		}
 
-		case `gtts`      : 
-		case `tts`       : 
+		case `gtts`:
+		case `tts`:
 		case `text2sound`: {
 			if (!parameter) {
 				conn.sendMessage(senderNumber, "Inputnya salah kak :)", MessageType.text, {
@@ -561,19 +546,19 @@ module.exports = async (conn, message) => {
 			}
 
 			const language = parameter.split(" ")[0];
-			const text     = parameter.split(" ").splice(1).join(" ");
+			const text = parameter.split(" ").splice(1).join(" ");
 			axios({
-				url         : `https://salism3api.pythonanywhere.com/text2sound`,
-				method      : "POST",
+				url: `https://salism3api.pythonanywhere.com/text2sound`,
+				method: "POST",
 				responseType: "arraybuffer",
-				data        : {
+				data: {
 					"languageCode": language,
-					"text"        : text,
+					"text": text,
 				}
 			}).then(response => {
 				const audio = Buffer.from(response.data, "binary");
 				conn.sendMessage(senderNumber, audio, MessageType.audio, {
-					ptt   : true,
+					ptt: true,
 					quoted: message
 				});
 
@@ -586,8 +571,8 @@ module.exports = async (conn, message) => {
 			break;
 		}
 
-		case `wikipedia`: 
-		case `wiki`     : {
+		case `wikipedia`:
+		case `wiki`: {
 			if (!parameter) {
 				conn.sendMessage(senderNumber, "Inputnya salah kak :)", MessageType.text, {
 					quoted: message
@@ -616,8 +601,8 @@ module.exports = async (conn, message) => {
 			break;
 		}
 
-		case `textsticker`: 
-		case `textstiker` : {
+		case `textsticker`:
+		case `textstiker`: {
 			if (!parameter) {
 				conn.sendMessage(senderNumber, "Ups teks nya jangan sampai lupa ya kak 😋", MessageType.text, {
 					quoted: message
@@ -629,8 +614,8 @@ module.exports = async (conn, message) => {
 				"text": parameter.slice(0, 60)
 			});
 			const sticker = new WSF.Sticker(response.data.image, {
-				crop  : false,
-				pack  : "Stiker",
+				crop: false,
+				pack: "Stiker",
 				author: stickerParameter
 			});
 			await sticker.build();
@@ -641,8 +626,8 @@ module.exports = async (conn, message) => {
 			break;
 		}
 
-		case `gifsticker`: 
-		case 'gifstiker' : {
+		case `gifsticker`:
+		case 'gifstiker': {
 			if (quotedMessage) {
 				message.message = quotedMessage;
 			}
@@ -662,10 +647,10 @@ module.exports = async (conn, message) => {
 			}
 
 			const imagePath = await conn.downloadAndSaveMediaMessage(message, Math.floor(Math.random() * 1000000));
-			const sticker   = new WSF.Sticker("./" + imagePath, {
+			const sticker = new WSF.Sticker("./" + imagePath, {
 				animated: true,
-				pack    : "Sticker",
-				author  : stickerParameter
+				pack: "Sticker",
+				author: stickerParameter
 			});
 			await sticker.build();
 			fs.unlinkSync(imagePath);
@@ -704,10 +689,10 @@ module.exports = async (conn, message) => {
 			let tingkat = parameter.split(" ")[0];
 
 			switch (tingkat) {
-				case "trigonometri": 
-				case "trig"        : {
-					let a      = Math.floor(Math.random() * 101);
-					let b      = Math.floor(Math.random() * 101);
+				case "trigonometri":
+				case "trig": {
+					let a = Math.floor(Math.random() * 101);
+					let b = Math.floor(Math.random() * 101);
 					let answer = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2))
 					console.log('hasilnya adalah: ' + answer);
 					const msg = await conn.sendMessage(senderNumber, `diketahui sebuah segitiga siku-siku dengan  alas = ${a} dan tinggi = ${b}, tentukan sisi miringnya\n\nbalas pesan ini untuk menjawab`, MessageType.text, {
@@ -730,12 +715,12 @@ module.exports = async (conn, message) => {
 				}
 				default: {
 					const response = await axios.get("https://salism3api.pythonanywhere.com/math/");
-					let   image    = await axios.get(response.data.image, {
+					let image = await axios.get(response.data.image, {
 						"responseType": "arraybuffer"
 					});
-					      image = Buffer.from(image.data, "binary");
-					const msg   = await conn.sendMessage(senderNumber, image, MessageType.image, {
-						quoted : message,
+					image = Buffer.from(image.data, "binary");
+					const msg = await conn.sendMessage(senderNumber, image, MessageType.image, {
+						quoted: message,
 						caption: "Balas pesan ini untuk menjawab!"
 					});
 					questionAnswer[msg.key.id] = response.data.answer;
@@ -754,9 +739,9 @@ module.exports = async (conn, message) => {
 			break;
 		}
 
-		case `stickernobg`: 
-		case `stikernobg` : 
-		case `snobg`      : {
+		case `stickernobg`:
+		case `stikernobg`:
+		case `snobg`: {
 			if (quotedMessage) {
 				message.message = quotedMessage;
 			}
@@ -769,20 +754,20 @@ module.exports = async (conn, message) => {
 			}
 
 			conn.sendMessage(senderNumber, 'Sedang di proses sabar ya kak. \n\ndiperikarakan sekitar 1 menit akan selesai maaf ya kak.', MessageType.text);
-			
-			const imagePath= await conn.downloadAndSaveMediaMessage(message);
-			let output     = Math.floor(Math.random()*1000000);
-			let outputPath = output.toString().concat("",".png");
+
+			const imagePath = await conn.downloadAndSaveMediaMessage(message);
+			let output = Math.floor(Math.random() * 1000000);
+			let outputPath = output.toString().concat("", ".png");
 
 			const settings = {
-				url            : "https://api.clickmajic.com/v1/remove-background",
+				url: "https://api.clickmajic.com/v1/remove-background",
 				sourceImagePath: imagePath,
 				outputImagePath: outputPath
 			};
 
 			request.post(
 				{
-					url     : settings.url,
+					url: settings.url,
 					formData: { sourceFile: fs.createReadStream(settings.sourceImagePath), api_key: "da91f1a209fe88c68ad4cf2f571d4ed0" },
 					encoding: null,
 				},
@@ -794,8 +779,8 @@ module.exports = async (conn, message) => {
 			);
 
 			const sticker = new WSF.Sticker(outputPath, {
-				crop  : false,
-				pack  : "sticker",
+				crop: false,
+				pack: "sticker",
 				author: stickerParameter
 			});
 			await sticker.build();
@@ -813,7 +798,7 @@ module.exports = async (conn, message) => {
 			if (quotedMessage) message.message = quotedMessage
 			if (!!parameter) {
 				var [alias, ...text] = parameter.split` `
-				    text             = text.join` `
+				text = text.join` `
 				conn['sendMessage'](senderNumber, bahasa_planet(text, alias), 'conversation', {
 					quoted: message
 				})
@@ -826,7 +811,7 @@ module.exports = async (conn, message) => {
 			break;
 		}
 
-		case `lirik` : 
+		case `lirik`:
 		case `lyrics`: {
 			if (!parameter) {
 				conn.sendMessage(senderNumber, "Kok lagunya nggak ada sih kak 🥺, silahkan diulangi ya", MessageType.text, {
@@ -835,7 +820,7 @@ module.exports = async (conn, message) => {
 				break;
 			}
 
-			const searches  = await Client.songs.search(parameter);
+			const searches = await Client.songs.search(parameter);
 			const firstSong = searches[0]
 
 			if (!firstSong) {
@@ -845,7 +830,7 @@ module.exports = async (conn, message) => {
 			} else {
 
 				const lyrics = await firstSong.lyrics();
-				const text   = `lirik lagu *${firstSong.fullTitle}*\n\n${lyrics}`
+				const text = `lirik lagu *${firstSong.fullTitle}*\n\n${lyrics}`
 
 				conn.sendMessage(senderNumber, text, MessageType.text, {
 					quoted: message
@@ -859,12 +844,12 @@ module.exports = async (conn, message) => {
 			fetch('https://www.bmkg.go.id/gempabumi/gempabumi-terkini.bmkg').then((res) => res.text()).then((body) => {
 				let result = scrapy.extract(body, model);
 
-				let waktu     = result[1] || "Tidak ada data";
-				let lintang   = result[2] || "Tidak ada data";
-				let bujur     = result[3] || "Tidak ada data";
+				let waktu = result[1] || "Tidak ada data";
+				let lintang = result[2] || "Tidak ada data";
+				let bujur = result[3] || "Tidak ada data";
 				let magnitudo = result[4] || "Tidak ada data";
 				let kedalaman = result[5] || "Tidak ada data";
-				let lokasi    = result[6] || "Tidak ada data";
+				let lokasi = result[6] || "Tidak ada data";
 
 				const text = `informasi gempa terbaru:\n\nWaktu: *${waktu}*\nBujur: *${bujur}*\nLintang: *${lintang}*\nMagnitudo: *${magnitudo}*\nKedalaman: *${kedalaman}*\nLokasi: *${lokasi}*`;
 
@@ -883,52 +868,35 @@ module.exports = async (conn, message) => {
 				break;
 			}
 
-			const url    = 'https://www.yt-download.org/api/button/mp3/';
-			const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-
-			if (regExp.test(parameter)) {
+			const url = 'https://www.yt-download.org/api/button/mp3/';
+			if (ytregex.test(parameter)) {
 
 				conn.sendMessage(senderNumber, "Tunggu sebentar ya :3", MessageType.text, {
 					quoted: message
 				});
 
-				var match  = parameter.match(regExp);
+				var match = parameter.match(regExp);
 				var result = (match && match[7].length == 11) ? match[7] : false;
-				var links  = url + result;
+				var links = url + result;
 
-				const model = {
-					link   : ['a.shadow-xl (href)'],
-					quality: ['div.text-shadow-1'],
-				};
+				if (ytregex.test(parameter)) {
 
-				fetch(links).then((res) => res.text()).then((body) => {
-					let result = scrapy.extract(body, model);
-					console.log(result.link);
-					if (result.link == null) {
-						conn.sendMessage(senderNumber, "Aduh😭, videonya gabisa diunduh, mungkin video kamu mengandung batasa seperti 18+, Video Pribadi atau diblokir di negaramu 🥲. \n\nAlternatifnya gunakan video lain yang serupa dan tidak memiliki batasan misalnya video reupload👀.", MessageType.text, {
-							quoted: message
-						});
-					} else {
-
-						let thelink = result.link;
-						let info1   = result.quality[1].replace(/\s+/g, '') + " " + result.quality[2];
-						if (result.quality.length < 4) {
-							const text = `Musik kamu sudah siap diunduh, silahkan pilih resolusi dan klik link yang tersedia untuk memulai pengunduhan\n\n*${info1}* : ${thelink}`;
-							conn.sendMessage(senderNumber, text, MessageType.text, {
-								quoted: message
-							});
+					conn.sendMessage(senderNumber, "Tunggu sebentar ya :3", MessageType.text, {
+						quoted: message
+					});
+	
+					var match = parameter.match(regExp);
+					var result = (match && match[7].length == 11) ? match[7] : false;
+					var links = 'https://freerestapi.herokuapp.com/api/ytmp3?url=https://www.youtube.com/watch?v=' + result;
+	
+					request.get(links, { json: true }, (error, response, body) => {
+						if (!error || response.statusCode == 200) {
+							conn.sendMessage(senderNumber, `Audio kamu sudah siap di download\n\nJudul: *${body.title}*\nlink: ${body.url}`, MessageType.text, { quoted: message })
 						} else {
-
-							let info2 = result.quality[4].replace(/\s+/g, '') + " " + result.quality[5];
-
-							const text = `Musik kamu sudah siap diunduh, silahkan pilih resolusi dan klik link yang tersedia untuk memulai pengunduhan\n\n*${info1}* : ${thelink[0]}\n\n*${info2}* : ${thelink[1]}`;
-
-							conn.sendMessage(senderNumber, text, MessageType.text, {
-								quoted: message
-							});
+							conn.sendMessage(senderNumber, "Maaf video yang kamu minta tidak bisa di download 😭", MessageType.text, { quoted: message });
 						}
-					}
-				});
+					})
+				}
 
 			} else {
 				conn.sendMessage(senderNumber, "Sepertinya link yang kamu masukkan salah, silahkan coba link lainnya ya.", MessageType.text, {
@@ -938,7 +906,7 @@ module.exports = async (conn, message) => {
 			break;
 		}
 
-		case `tl`       : 
+		case `tl`:
 		case `translate`: {
 
 			if (!parameter) {
@@ -947,7 +915,7 @@ module.exports = async (conn, message) => {
 				})
 			} else {
 				const language = parameter.split(" ")[0];
-				const text     = parameter.split(" ").splice(1).join(" ");
+				const text = parameter.split(" ").splice(1).join(" ");
 				if (teslang.isSupported(language)) {
 
 					translate(text, {
@@ -964,7 +932,7 @@ module.exports = async (conn, message) => {
 					});
 				} else {
 					const buttons = [{
-						buttonId  : 'id1',
+						buttonId: 'id1',
 						buttonText: {
 							displayText: '!kodebahasa',
 						},
@@ -973,9 +941,9 @@ module.exports = async (conn, message) => {
 
 					const buttonMessage = {
 						contentText: "Maaf kode bahasa salah atau mungkin kamu lupa memasukkan kode bahasa.",
-						footerText : 'klik untuk mengetahui kode bahasa',
-						buttons    : buttons,
-						headerType : 1
+						footerText: 'klik untuk mengetahui kode bahasa',
+						buttons: buttons,
+						headerType: 1
 					}
 
 					conn.sendMessage(senderNumber, buttonMessage, MessageType.buttonsMessage);
@@ -999,61 +967,27 @@ module.exports = async (conn, message) => {
 				break;
 			}
 
-			const url    = 'https://www.yt-download.org/api/button/videos/';
-			const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-
-			if (regExp.test(parameter)) {
+			if (ytregex.test(parameter)) {
 
 				conn.sendMessage(senderNumber, "Tunggu sebentar ya :3", MessageType.text, {
 					quoted: message
 				});
 
-				var match  = parameter.match(regExp);
+				var match = parameter.match(regExp);
 				var result = (match && match[7].length == 11) ? match[7] : false;
-				var links  = url + result;
+				var links = 'https://freerestapi.herokuapp.com/api/ytmp4?url=https://www.youtube.com/watch?v=' + result;
 
-				const model = {
-					link   : ['a.shadow-xl (href)'],
-					quality: ['div.text-shadow-1'],
-				};
-
-				fetch(links).then((res) => res.text()).then((body) => {
-					let result = scrapy.extract(body, model);
-					console.log(result.link);
-					if (result.link == null) {
-						conn.sendMessage(senderNumber, "Aduh😭, videonya gabisa diunduh, mungkin video kamu mengandung batasa seperti 17+, Video Pribadi atau diblokir di negaramu 🥲. \n\nAlternatifnya gunakan video lain yang serupa dan tidak memiliki batasan misalnya video reupload👀.", MessageType.text, {
-							quoted: message
-						});
+				request.get(links, { json: true }, (error, response, body) => {
+					if (!error || response.statusCode == 200) {
+						conn.sendMessage(senderNumber, `Video kamu sudah siap di download\n\nJudul: *${body.title}*\nlink: ${body.url}`, MessageType.text, { quoted: message })
 					} else {
-						let thelink = result.link;
-						let info1   = result.quality[1].replace(/\s+/g, '') + " " + result.quality[2];
-						if (result.quality.length < 4) {
-							const text = `Videomu sudah siap diunduh, silahkan pilih resolusi dan klik link yang tersedia untuk memulai pengunduhan\n\n*${info1}* : ${thelink}`;
-							conn.sendMessage(senderNumber, text, MessageType.text, {
-								quoted: message
-							});
-						
-						} else {
-
-							let info2 = result.quality[4].replace(/\s+/g, '') + " " + result.quality[5];
-
-							const text = `Videomu sudah siap diunduh, silahkan pilih resolusi dan klik link yang tersedia untuk memulai pengunduhan\n\n*${info1}* : ${thelink[0]}\n\n*${info2}* : ${thelink[1]}`;
-
-							conn.sendMessage(senderNumber, text, MessageType.text, {
-								quoted: message
-							});
-						}
+						conn.sendMessage(senderNumber, "Maaf video yang kamu minta tidak bisa di download 😭", MessageType.text, { quoted: message });
 					}
-				});
-
-			} else {
-				conn.sendMessage(senderNumber, "Sepertinya link yang kamu masukkan salah, silahkan coba link lainnya ya.", MessageType.text, {
-					quoted: message
-				});
+				})
 			}
+
 			break;
 		}
-
 		default: {
 			if (quotedMessage && questionAnswer[quotedMessageContext.stanzaId] && textMessage) {
 				console.log(quotedMessage)
