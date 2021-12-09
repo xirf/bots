@@ -129,7 +129,7 @@ module.exports = async (conn, message) => {
 				parameter = parameter.split(" ").slice(1).join(" ");
 			}
 
-			if(d.toLowerCase == "routes"){
+			if(d.toLowerCase() == "routes"){
 				command = "quotes";
 			}else{
 				let result = v.TextCorrection({
@@ -144,6 +144,12 @@ module.exports = async (conn, message) => {
 	}
 
 	const stickerParameter = parameter || WAUser
+
+
+	if (textMessage.toString().toLowerCase() == "beb"){
+		conn.sendMessage(senderNumber, "iya sayang, kenapa?", MessageType.text, {quoted: message});
+	}
+
 
 	if (inPdfInput.includes(senderNumber)) {
 		if (stickerMessage) return;
@@ -1026,6 +1032,7 @@ module.exports = async (conn, message) => {
 							conn.sendMessage(senderNumber, text, MessageType.text, {
 								quoted: message
 							});
+						
 						} else {
 
 							let info2 = result.quality[4].replace(/\s+/g, '') + " " + result.quality[5];
