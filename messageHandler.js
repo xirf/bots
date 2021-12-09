@@ -131,12 +131,6 @@ module.exports = async (conn, message) => {
 
 	const stickerParameter = parameter || WAUser
 
-
-	if (textMessage.toString().toLowerCase() == "beb") {
-		conn.sendMessage(senderNumber, "iya sayang, kenapa?", MessageType.text, { quoted: message });
-	}
-
-
 	if (inPdfInput.includes(senderNumber)) {
 		if (stickerMessage) return;
 
