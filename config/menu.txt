@@ -11,37 +11,37 @@ Jika kamu memiliki saran fitur langsung chat ke Facebook ya!
 
 ╔═[ EDUKASI ]
 ║
-╠ *!kbbi [query]*
-╠ *!wikipedia [query]*
-╠ ~*brainly [query]*~
+╠ *!kbbi kata*
+╠ *~!wikipedia~* (bug)
+╠ ~*brainly soal*~ (bug)
 ╚════════
 
 ╔═ [ CONVERT ]
 ║
-╠ *!aksara [text]*
-╠ *!hex [text]*
-╠ *!binary [text]*
+╠ *!aksara teks*
+╠ *!hex teks*
+╠ *!binary teks*
 ╠ *!pdf (privasi chat only)*
-╠ *!bplanet [alias] [text]*
+╠ *!bplanet alias teks*
 ║     ╚ !bplanet g anda sehat?
 ╚════════
 
 ╔═ [ MEDIA ]
 ║   ╚ Reply stikernya ya
-╠ *!sticker*
-╠ *!stickernobg*
-╠ *!gifsticker*
-╠ *!textsticker [text]*
+╠ *!sticker caption*
+╠ *~!stickernobg caption~* (bug)
+╠ *!gifsticker caption*
+╠ *~!textsticker caption~* (bug)
 ╠ *!toimg*
 ║   ╚ Sticker ke gambar
 ╠ *!togif*
 ║   ╚ Sticker ke Gif
-╠ *!write [text]*
+╠ *!write teks*
 ╚════════
 
 ╔═ [ TEXT ]
 ║
-╠ *!Ruotes*
+╠ *!Quotes*
 ╠ *!Randomfact* / *!fact*
 ╠ *!lirik* (genius)
 ╚════════
@@ -50,7 +50,7 @@ Jika kamu memiliki saran fitur langsung chat ke Facebook ya!
 ║
 ╠ *!math*
 ║  ╚ Tantangan mengerjakan soal
-╠ *!yt [link]*
-╠ *!ytmp3 [link]*
+╠ *!yt link*
+╠ *!ytmp3 link*
 ╠ *!gempa*
 ╚════════
