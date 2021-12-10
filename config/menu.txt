@@ -13,7 +13,7 @@ Jika kamu memiliki saran fitur langsung chat ke Facebook ya!
 ║
 ╠ *!kbbi kata*
 ╠ *~!wikipedia~* (bug)
-╠ ~*brainly soal*~ (bug)
+╠ *brainly soal*
 ╚════════
 
 ╔═ [ CONVERT ]

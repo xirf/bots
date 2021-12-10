@@ -472,17 +472,17 @@ module.exports = async (conn, message) => {
 				break;
 			}
 
-			conn.sendMessage(senderNumber, "Sedang mencari jawabannya 🤨🔎")
+			conn.sendMessage(senderNumber, "Sedang mencari jawabannya 🧐🔎", MessageType.text, {quoted: message});
 
-			brain.searchWithMT("id", "telegram").then(res => {
+			brain.searchWithMT("id", parameter).then(res => {
 				for (let i = 0; i < res.length; i++) {
 					let soal = res[i].question.content
 					let answer = res[i].answers[0].content
-					console.log("\n=========\n" + soal);
-					conn.sendMessage(senderNumber, `soal = ${soal}\n\nJawaban: ${answer}`, MessageType.text, { quoted: message });
+					
+					conn.sendMessage(senderNumber, `_*soal:*_ ${soal}\n\n_*Jawaban:*_ ${answer}`, MessageType.text, { quoted: message });
 				}
 			}).catch(err => {
-				conn.sendMessage(senderNumber, "Maaf terjadi kesalahan kak Y^Y)");
+				conn.sendMessage(senderNumber, "Maaf terjadi kesalahan kak Y^Y)", MessageType.text, {quoted: message});
 			});
 
 			break;
