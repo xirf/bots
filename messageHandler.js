@@ -1,58 +1,58 @@
-const fs                      = require("fs");
-const axios                   = require("axios");
-const PDFDocument             = require("pdfkit");
-const request                 = require("request");
-const teslang                 = require("./lib/lang");
-const scrapy                  = require("node-scrapy");
-const Genius                  = require("genius-lyrics");
-const translate               = require("translate-google");
-const { Brainly }             = require("brainly-scraper-v2");
-const webpConverter           = require("./lib/webpconverter");
-const bahasa_planet           = require("./lib/bahasa_planet");
-const WSF                     = require("wa-sticker-formatter");
-const {	MessageType,Mimetype} = require("@adiwajshing/baileys");
-const NLP                     = require("@hiyurigi/nlp")("TextCorrection");
-const prefix                  = fs.readFileSync("./config/prefix.txt", "utf-8");
-const factList                = JSON.parse(fs.readFileSync("./lib/fact.json", "utf-8"));
-const quotesList              = JSON.parse(fs.readFileSync("./lib/quotes.json", "utf-8"));
-const fetch                   = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-const {LatinKeAksara}         = require("@sajenid/aksara.js");
-const brain                   = new Brainly("id");
-const {	isNull }              = require("util");
-const bufferImagesForPdf      = {};
-const questionAnswer          = {};
-const inPdfInput              = [];
+const fs = require("fs");
+const axios = require("axios");
+const PDFDocument = require("pdfkit");
+const request = require("request");
+const teslang = require("./lib/lang");
+const scrapy = require("node-scrapy");
+const Genius = require("genius-lyrics");
+const translate = require("translate-google");
+const { Brainly } = require("brainly-scraper-v2");
+const webpConverter = require("./lib/webpconverter");
+const bahasa_planet = require("./lib/bahasa_planet");
+const WSF = require("wa-sticker-formatter");
+const { MessageType, Mimetype } = require("@adiwajshing/baileys");
+const NLP = require("@hiyurigi/nlp")("TextCorrection");
+const prefix = fs.readFileSync("./config/prefix.txt", "utf-8");
+const factList = JSON.parse(fs.readFileSync("./lib/fact.json", "utf-8"));
+const quotesList = JSON.parse(fs.readFileSync("./lib/quotes.json", "utf-8"));
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+const { LatinKeAksara } = require("@sajenid/aksara.js");
+const brain = new Brainly("id");
+const { isNull } = require("util");
+const bufferImagesForPdf = {};
+const questionAnswer = {};
+const inPdfInput = [];
 
 
 const ytregex = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-const Client  = new Genius.Client("uO-XWa9PYgZn-t7UrNW_YTDlUrNCtMq8xmCxySRRGXP4QJ0mtFwoqi1z-ywdGmXj");
+const Client = new Genius.Client("uO-XWa9PYgZn-t7UrNW_YTDlUrNCtMq8xmCxySRRGXP4QJ0mtFwoqi1z-ywdGmXj");
 
 let v = new NLP([
-	'giftextsticker', 	'stickernobg', 	'textsticker',
-	'stikernobg', 		'gifsticker',	'randomfact',
-	'kodebahasa', 		'gifstiker', 	'translate',
-	'wikipedia', 		'contact', 		'sticker',
-	'donatur', 			'brainly', 		'bplanet',
-	'lyrics', 			'stiker', 		'binary',
-	'aksara', 			'quotes', 		'cancel',
-	'lirik', 			'ytmp3', 		'gempa',
-	'snobg', 			'toimg', 		'togif',
-	'write', 			'tulis', 		'help',
-	'menu', 			'gtts', 		'kbbi',
-	'fact', 			'math', 		'done',
-	'pdf', 				'bin', 			'hex',
-	'yt', 				'tl',			't',
+	'giftextsticker', 'stickernobg', 'textsticker',
+	'stikernobg', 'gifsticker', 'randomfact',
+	'kodebahasa', 'gifstiker', 'translate',
+	'wikipedia', 'contact', 'sticker',
+	'donatur', 'brainly', 'bplanet',
+	'lyrics', 'stiker', 'binary',
+	'aksara', 'quotes', 'cancel',
+	'lirik', 'ytmp3', 'gempa',
+	'snobg', 'toimg', 'togif',
+	'write', 'tulis', 'help',
+	'menu', 'gtts', 'kbbi',
+	'fact', 'math', 'done',
+	'pdf', 'bin', 'hex',
+	'yt', 'tl', 't',
 ]);
 
 module.exports = async (conn, message) => {
-	const senderNumber         = message.key.remoteJid;
-	const imageMessage         = message.message.imageMessage;
-	const videoMessage         = message.message.videoMessage;
-	const stickerMessage       = message.message.stickerMessage;
-	const extendedTextMessage  = message.message.extendedTextMessage;
-	const buttons              = message.message.buttonsResponseMessage
+	const senderNumber = message.key.remoteJid;
+	const imageMessage = message.message.imageMessage;
+	const videoMessage = message.message.videoMessage;
+	const stickerMessage = message.message.stickerMessage;
+	const extendedTextMessage = message.message.extendedTextMessage;
+	const buttons = message.message.buttonsResponseMessage
 	const quotedMessageContext = extendedTextMessage && extendedTextMessage.contextInfo && extendedTextMessage.contextInfo;
-	const quotedMessage        = quotedMessageContext && quotedMessageContext.quotedMessage;
+	const quotedMessage = quotedMessageContext && quotedMessageContext.quotedMessage;
 
 	let buttonMessages;
 	if (buttons != undefined) {
@@ -60,8 +60,8 @@ module.exports = async (conn, message) => {
 	}
 
 	const textMessage = message.message.conversation || message.message.extendedTextMessage && message.message.extendedTextMessage.text || imageMessage && imageMessage.caption || videoMessage && videoMessage.caption || buttonMessages
-	const sender 	  = conn.contacts[senderNumber]
-	let WAUser 		  = sender?.notify || sender?.short || sender?.name || sender?.vname || conn?.user?.name
+	const sender = conn.contacts[senderNumber]
+	let WAUser = sender?.notify || sender?.short || sender?.name || sender?.vname || conn?.user?.name
 
 	if (textMessage == '.menu') {
 
@@ -475,7 +475,7 @@ module.exports = async (conn, message) => {
 			conn.sendMessage(senderNumber, "Sedang mencari jawabannya 🤨🔎")
 
 			brain.searchWithMT("id", "telegram").then(res => {
-				let data = []
+				let data = [];
 				for (let i = 0; i < res.length; i++) {
 					let soal = res[i].question.content;
 					let answer = res[i].answers[0].content;
@@ -485,29 +485,24 @@ module.exports = async (conn, message) => {
 						description: answer,
 						rowId: "row" + i
 					});
-					
 				}
+				
 				try {
-					const rows = [
-						{title: 'Row 1', description: "Hello it's description 1", rowId:"rowid1"},
-						{title: 'Row 2', description: "Hello it's description 2", rowId:"rowid2"}
-					   ]
-					   
-					   const sections = [{title: "🧠Brainly", rows: rows}]
-					   
-					   const button = {
+					const sections = [{ title: "🧠Brainly", rows: data}]
+
+					const button = {
 						buttonText: 'Lihat jawaban',
 						description: "Jawaban kamu sudah ada silahkan klik tombol dibawah ya😊",
 						sections: sections,
 						listType: 1
-					   }
-					   
-					   conn.sendMessage(id, button, MessageType.listMessage, {quoted: message});
+					}
+
+					conn.sendMessage(senderNumber, button, MessageType.listMessage, { quoted: message });
 				} catch (err) {
 					conn.sendMessage(senderNumber, `error :/`, MessageType.text, { quoted: message });
 				}
 
-				   
+
 			}).catch(err => {
 				conn.sendMessage(senderNumber, "Maaf terjadi kesalahan kak Y^Y)");
 			});
