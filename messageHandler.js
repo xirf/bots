@@ -482,7 +482,7 @@ module.exports = async (conn, message) => {
 
 					data.push({
 						title: `*Soal:* ${soal}`,
-						description: `*Jawaban:* ${jawaban}`,
+						description: `*Jawaban:* ${answer}`,
 						rowId: "row" + i
 					});
 				}
