@@ -481,8 +481,8 @@ module.exports = async (conn, message) => {
 					let answer = res[i].answers[0].content;
 
 					data.push({
-						title: `Soal: ${soal}\n\n`,
-						description: `Jawaban: ${jawaban}`,
+						title: `*Soal:* ${soal}`,
+						description: `*Jawaban:* ${jawaban}`,
 						rowId: "row" + i
 					});
 				}
@@ -499,6 +499,7 @@ module.exports = async (conn, message) => {
 
 			}).catch(err => {
 				conn.sendMessage(senderNumber, "Maaf terjadi kesalahan kak Y^Y)", MessageType.text, {quoted: message});
+				console.log(err);
 			});
 
 			break;
