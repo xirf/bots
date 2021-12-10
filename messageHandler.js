@@ -472,7 +472,7 @@ module.exports = async (conn, message) => {
 				break;
 			}
 
-			conn.sendMessage(senderNumber, "Sedang mencari jawabannya 🤨🔎")
+			conn.sendMessage(senderNumber, "Sedang mencari jawabannya 🤨🔎", MessageType.text, {quoted: message})
 
 			brain.searchWithMT("id", "telegram").then(res => {
 				let data = [];
@@ -486,25 +486,19 @@ module.exports = async (conn, message) => {
 						rowId: "row" + i
 					});
 				}
-				
-				try {
-					const sections = [{ title: "🧠Brainly", rows: data}]
+				const sections = [{ title: "🧠Brainly", rows: data }]
 
-					const button = {
-						buttonText: 'Lihat jawaban',
-						description: "Jawaban kamu sudah ada silahkan klik tombol dibawah ya😊",
-						sections: sections,
-						listType: 1
-					}
-
-					conn.sendMessage(senderNumber, button, MessageType.listMessage, { quoted: message });
-				} catch (err) {
-					conn.sendMessage(senderNumber, `error :/`, MessageType.text, { quoted: message });
+				const button = {
+					buttonText: 'Lihat jawaban',
+					description: "Jawaban kamu sudah ada silahkan klik tombol dibawah ya😊",
+					sections: sections,
+					listType: 1
 				}
 
+				conn.sendMessage(senderNumber, button, MessageType.listMessage, { quoted: message });
 
 			}).catch(err => {
-				conn.sendMessage(senderNumber, "Maaf terjadi kesalahan kak Y^Y)");
+				conn.sendMessage(senderNumber, "Maaf terjadi kesalahan kak Y^Y)", MessageType.text, {quoted: message});
 			});
 
 			break;
