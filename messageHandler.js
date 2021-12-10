@@ -474,23 +474,23 @@ module.exports = async (conn, message) => {
 
 			conn.sendMessage(senderNumber, "Sedang mencari jawabannya 🤨🔎", MessageType.text, {quoted: message})
 
-			brain.searchWithMT("id", "telegram").then(res => {
+			brain.searchWithMT("id", parameter).then(res => {
 				let data = [];
 				for (let i = 0; i < res.length; i++) {
 					let soal = res[i].question.content;
 					let answer = res[i].answers[0].content;
 
 					data.push({
-						title: soal,
-						description: answer,
+						title: `Soal: ${soal}\n\n`,
+						description: `Jawaban: ${jawaban}`,
 						rowId: "row" + i
 					});
 				}
-				const sections = [{ title: "🧠Brainly", rows: data }]
+				const sections = [{ title: `${conn.user.name} Brainly Command`, rows: data }]
 
 				const button = {
 					buttonText: 'Lihat jawaban',
-					description: "Jawaban kamu sudah ada silahkan klik tombol dibawah ya😊",
+					description: "Jawaban kamu sudah ada ditemukan\n\nSilahkan klik tombol dibawah ya😁",
 					sections: sections,
 					listType: 1
 				}
