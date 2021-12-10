@@ -472,17 +472,44 @@ module.exports = async (conn, message) => {
 				break;
 			}
 
-			conn.sendMessage(senderNumber, "Sedang mencari jawabannya 🧐🔎", MessageType.text, {quoted: message});
+			conn.sendMessage(senderNumber, "Sedang mencari jawabannya 🤨🔎")
 
-			brain.searchWithMT("id", parameter).then(res => {
+			brain.searchWithMT("id", "telegram").then(res => {
+				let data = []
 				for (let i = 0; i < res.length; i++) {
-					let soal = res[i].question.content
-					let answer = res[i].answers[0].content
+					let soal = res[i].question.content;
+					let answer = res[i].answers[0].content;
+
+					data.push({
+						title: soal,
+						description: answer,
+						rowId: "row" + i
+					});
 					
-					conn.sendMessage(senderNumber, `_*soal:*_ ${soal}\n\n_*Jawaban:*_ ${answer}`, MessageType.text, { quoted: message });
 				}
+				try {
+					const rows = [
+						{title: 'Row 1', description: "Hello it's description 1", rowId:"rowid1"},
+						{title: 'Row 2', description: "Hello it's description 2", rowId:"rowid2"}
+					   ]
+					   
+					   const sections = [{title: "🧠Brainly", rows: rows}]
+					   
+					   const button = {
+						buttonText: 'Lihat jawaban',
+						description: "Jawaban kamu sudah ada silahkan klik tombol dibawah ya😊",
+						sections: sections,
+						listType: 1
+					   }
+					   
+					   conn.sendMessage(id, button, MessageType.listMessage, {quoted: message});
+				} catch (err) {
+					conn.sendMessage(senderNumber, `error :/`, MessageType.text, { quoted: message });
+				}
+
+				   
 			}).catch(err => {
-				conn.sendMessage(senderNumber, "Maaf terjadi kesalahan kak Y^Y)", MessageType.text, {quoted: message});
+				conn.sendMessage(senderNumber, "Maaf terjadi kesalahan kak Y^Y)");
 			});
 
 			break;
@@ -870,7 +897,7 @@ module.exports = async (conn, message) => {
 
 					request.get(links, { json: true }, (error, response, body) => {
 						if (!error || response.statusCode == 200) {
-							conn.sendMessage(senderNumber, `Audio kamu sudah siap di download\n\nJudul: *${body.title}*\nlink: ${body.url}`, MessageType.text, { quoted: message })
+							conn.sendMessage(senderNumber, `Audio kamu sudah siap di download\n*klik baca selengkanya sebelum klik link*\n\nJudul: *${body.title}*\nlink: ${body.url}`, MessageType.text, { quoted: message })
 						} else {
 							conn.sendMessage(senderNumber, "Maaf video yang kamu minta tidak bisa di download 😭", MessageType.text, { quoted: message });
 						}
