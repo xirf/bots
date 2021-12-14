@@ -414,29 +414,7 @@ module.exports = async (conn, message) => {
 
 		case `write`:
 		case `nulis`: {
-			if (!parameter) {
-				conn.sendMessage(senderNumber, "Ups, teks nya mana ya kak?", MessageType.text, {
-					quoted: message
-				});
-				break;
-			}
-
-			const response = await axios.post("https://salism3api.pythonanywhere.com/write", {
-				"text": parameter
-			});
-			const imagesUrl = response.data.images.slice(0, 6);
-
-			for (const imageUrl of imagesUrl) {
-				const response = await axios({
-					url: imageUrl,
-					method: "GET",
-					responseType: "arraybuffer",
-				});
-				const image = Buffer.from(response.data, "binary");
-				await conn.sendMessage(senderNumber, image, MessageType.image, {
-					quoted: message
-				});
-			}
+			conn.sendMessage(senderNumber, "Mohon maaf fitur ini sedang dalam perbaikan", MessageType.text, {quoted: message})
 			break;
 		}
 
@@ -472,7 +450,7 @@ module.exports = async (conn, message) => {
 				break;
 			}
 
-			conn.sendMessage(senderNumber, "Sedang mencari jawabannya 🤨🔎", MessageType.text, {quoted: message})
+			conn.sendMessage(senderNumber, "Sedang mencari jawabannya 🤨🔎", MessageType.text, { quoted: message })
 
 			brain.searchWithMT("id", parameter).then(res => {
 				let data = [];
@@ -498,7 +476,7 @@ module.exports = async (conn, message) => {
 				conn.sendMessage(senderNumber, button, MessageType.listMessage, { quoted: message });
 
 			}).catch(err => {
-				conn.sendMessage(senderNumber, "Maaf terjadi kesalahan kak Y^Y)", MessageType.text, {quoted: message});
+				conn.sendMessage(senderNumber, "Maaf terjadi kesalahan kak Y^Y)", MessageType.text, { quoted: message });
 				console.log(err);
 			});
 
@@ -527,98 +505,19 @@ module.exports = async (conn, message) => {
 		case `gtts`:
 		case `tts`:
 		case `text2sound`: {
-			if (!parameter) {
-				conn.sendMessage(senderNumber, "Inputnya salah kak :)", MessageType.text, {
-					quoted: message
-				});
-				break;
-			}
-
-			if (parameter.split(" ").length == 1) {
-				conn.sendMessage(senderNumber, "Tidak ada kode bahasa / teks", MessageType.text, {
-					quoted: message
-				});
-				break;
-			}
-
-			const language = parameter.split(" ")[0];
-			const text = parameter.split(" ").splice(1).join(" ");
-			axios({
-				url: `https://salism3api.pythonanywhere.com/text2sound`,
-				method: "POST",
-				responseType: "arraybuffer",
-				data: {
-					"languageCode": language,
-					"text": text,
-				}
-			}).then(response => {
-				const audio = Buffer.from(response.data, "binary");
-				conn.sendMessage(senderNumber, audio, MessageType.audio, {
-					ptt: true,
-					quoted: message
-				});
-
-			}).catch(response => {
-				conn.sendMessage(senderNumber, `Kode bahasa *${language}* tidak ditemukan :(`, MessageType.text, {
-					quoted: message
-				});
-
-			});
+			conn.sendMessage(senderNumber, "Mohon maaf fitur ini sedang dalam perbaikan", MessageType.text, {quoted: message})
 			break;
 		}
 
 		case `wikipedia`:
 		case `wiki`: {
-			if (!parameter) {
-				conn.sendMessage(senderNumber, "Inputnya salah kak :)", MessageType.text, {
-					quoted: message
-				});
-				break;
-			}
-
-			axios.post("http://salism3api.pythonanywhere.com/wikipedia", {
-				"query": parameter
-			})
-				.then(response => {
-					const text = `*${response.data.title}*\n\n${response.data.content}`;
-					conn.sendMessage(senderNumber, text, MessageType.text, {
-						quoted: message
-					});
-				})
-				.catch(e => {
-					if ([500, 400, 404].includes(e.response.status)) {
-						conn.sendMessage(senderNumber, `Artikel tidak ditemukan :(`, MessageType.text, {
-							quoted: message
-						});
-					} else {
-						throw e;
-					}
-				})
+			conn.sendMessage(senderNumber, "Mohon maaf fitur ini sedang dalam perbaikan", MessageType.text, { quoted: message })
 			break;
 		}
 
 		case `textsticker`:
 		case `textstiker`: {
-			if (!parameter) {
-				conn.sendMessage(senderNumber, "Ups teks nya jangan sampai lupa ya kak 😋", MessageType.text, {
-					quoted: message
-				});
-				break;
-			}
-
-			const response = await axios.post("https://salism3api.pythonanywhere.com/text2img", {
-				"text": parameter.slice(0, 60)
-			});
-			const sticker = new WSF.Sticker(response.data.image, {
-				crop: false,
-				pack: "Stiker",
-				author: stickerParameter
-			});
-			await sticker.build();
-			const bufferImage = await sticker.get();
-			conn.sendMessage(senderNumber, bufferImage, MessageType.sticker, {
-				quoted: message
-			});
+			conn.sendMessage(senderNumber, "Mohon maaf fitur ini sedang dalam perbaikan", MessageType.text, { quoted: message })
 			break;
 		}
 
@@ -658,25 +557,8 @@ module.exports = async (conn, message) => {
 		}
 
 		case `giftextsticker`: {
-			if (!parameter) {
-				conn.sendMessage(senderNumber, "Teks nya mana ya kak? 🤔", MessageType.text, {
-					quoted: message
-				});
-				break;
-			}
+			conn.sendMessage(senderNumber, "Mohon maaf fitur ini sedang dalam perbaikan", MessageType.text, { quoted: message })
 
-			const response = await axios.post("https://salism3api.pythonanywhere.com/text2gif/", {
-				"text": parameter.slice(0, 60)
-			});
-			let image = await axios.get(response.data.image, {
-				"responseType": "arraybuffer"
-			});
-			image = Buffer.from(image.data, "binary");
-			image = await webpConverter.gifToWebp(image);
-			conn.sendMessage(senderNumber, image, MessageType.sticker, {
-				quoted: message
-			});
-			break;
 		}
 
 
@@ -684,110 +566,83 @@ module.exports = async (conn, message) => {
 
 			let tingkat = parameter.split(" ")[0];
 
-			switch (tingkat) {
-				case "trigonometri":
-				case "trig": {
-					let a = Math.floor(Math.random() * 101);
-					let b = Math.floor(Math.random() * 101);
-					let answer = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2))
-					console.log('hasilnya adalah: ' + answer);
-					const msg = await conn.sendMessage(senderNumber, `diketahui sebuah segitiga siku-siku dengan  alas = ${a} dan tinggi = ${b}, tentukan sisi miringnya\n\nbalas pesan ini untuk menjawab`, MessageType.text, {
-						quoted: message
+			let a = Math.floor(Math.random() * 101);
+			let b = Math.floor(Math.random() * 101);
+			let answer = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2))
+			console.log('hasilnya adalah: ' + answer);
+			const msg = await conn.sendMessage(senderNumber, `diketahui sebuah segitiga siku-siku dengan  alas = ${a} dan tinggi = ${b}, tentukan sisi miringnya\n\nbalas pesan ini untuk menjawab`, MessageType.text, {
+				quoted: message
+			});
+
+			questionAnswer[msg.key.id] = parseInt(answer.toString())
+
+			console.log(questionAnswer[msg.key.id]);
+
+			setTimeout(() => {
+				if (questionAnswer[msg.key.id]) {
+					conn.sendMessage(senderNumber, `ups waktu habis jawabannya adalah *${hasil}*`, MessageType.text, {
+						quoted: msg
 					});
-
-					questionAnswer[msg.key.id] = parseInt(answer.toString())
-
-					console.log(questionAnswer[msg.key.id]);
-
-					setTimeout(() => {
-						if (questionAnswer[msg.key.id]) {
-							conn.sendMessage(senderNumber, `ups waktu habis jawabannya adalah *${hasil}*`, MessageType.text, {
-								quoted: msg
-							});
-							delete questionAnswer[msg.key.id];
-						}
-					}, 600 * 1000)
-					break;
+					delete questionAnswer[msg.key.id];
 				}
-				default: {
-					const response = await axios.get("https://salism3api.pythonanywhere.com/math/");
-					let image = await axios.get(response.data.image, {
-						"responseType": "arraybuffer"
-					});
-					image = Buffer.from(image.data, "binary");
-					const msg = await conn.sendMessage(senderNumber, image, MessageType.image, {
-						quoted: message,
-						caption: "Balas pesan ini untuk menjawab!"
-					});
-					questionAnswer[msg.key.id] = response.data.answer;
-					console.log(questionAnswer[msg.key.id])
-					setTimeout(() => {
-						if (questionAnswer[msg.key.id]) {
-							conn.sendMessage(senderNumber, "Waktu habis!", MessageType.text, {
-								quoted: msg
-							});
-							delete questionAnswer[msg.key.id];
-						}
-					}, 600 * 1000);
-
-				}
-			}
+			}, 600 * 1000)
 			break;
 		}
 
 		case `stickernobg`:
 		case `stikernobg`:
 		case `snobg`: {
-			if (quotedMessage) {
-				message.message = quotedMessage;
-			}
+			conn.sendMessage(senderNumber, "Mohon maaf fitur ini sedang dalam perbaikan", MessageType.text, {quoted: message})
+			// if (quotedMessage) {
+			// 	message.message = quotedMessage;
+			// }
 
-			if (!message.message.imageMessage || message.message.imageMessage.mimetype != "image/jpeg") {
-				conn.sendMessage(senderNumber, "Aduh gambarnya mana ya kak?, pastikan ada gambarnya atau reply sebuah gambar ya kak😉", MessageType.text, {
-					quoted: message
-				});
-				break;
-			}
+			// if (!message.message.imageMessage || message.message.imageMessage.mimetype != "image/jpeg") {
+			// 	conn.sendMessage(senderNumber, "Aduh gambarnya mana ya kak?, pastikan ada gambarnya atau reply sebuah gambar ya kak😉", MessageType.text, {
+			// 		quoted: message
+			// 	});
+			// 	break;
+			// }
 
-			conn.sendMessage(senderNumber, 'Sedang di proses sabar ya kak. \n\ndiperikarakan sekitar 1 menit akan selesai maaf ya kak.', MessageType.text);
+			// conn.sendMessage(senderNumber, 'Sedang di proses sabar ya kak. \n\ndiperikarakan sekitar 1 menit akan selesai maaf ya kak.', MessageType.text);
 
-			const imagePath = await conn.downloadAndSaveMediaMessage(message);
-			let output = Math.floor(Math.random() * 1000000);
-			let outputPath = output.toString().concat("", ".png");
+			// const imagePath = await conn.downloadAndSaveMediaMessage(message);
+			// let output = Math.floor(Math.random() * 1000000);
+			// let outputPath = output.toString().concat("", ".png");
 
-			const settings = {
-				url: "https://api.clickmajic.com/v1/remove-background",
-				sourceImagePath: imagePath,
-				outputImagePath: outputPath
-			};
+			// const settings = {
+			// 	url: "https://api.clickmajic.com/v1/remove-background",
+			// 	sourceImagePath: imagePath,
+			// 	outputImagePath: outputPath
+			// };
 
-			request.post(
-				{
-					url: settings.url,
-					formData: { sourceFile: fs.createReadStream(settings.sourceImagePath), api_key: "da91f1a209fe88c68ad4cf2f571d4ed0" },
-					encoding: null,
-				},
-				function (error, response, body) {
-					if (error) { console.log(error); return; }
-					if (response.statusCode != 200) { console.log(body.toString('utf8')); return; }
-					fs.writeFileSync(settings.outputImagePath, body);
-				}
-			);
+			// request.post(
+			// 	{
+			// 		url: settings.url,
+			// 		formData: { sourceFile: fs.createReadStream(settings.sourceImagePath), api_key: "da91f1a209fe88c68ad4cf2f571d4ed0" },
+			// 		encoding: null,
+			// 	},
+			// 	function (error, response, body) {
+			// 		if (error) { console.log(error); return; }
+			// 		if (response.statusCode != 200) { console.log(body.toString('utf8')); return; }
+			// 		fs.writeFileSync(settings.outputImagePath, body);
+			// 	}
+			// );
 
-			const sticker = new WSF.Sticker(outputPath, {
-				crop: false,
-				pack: "sticker",
-				author: stickerParameter
-			});
-			await sticker.build();
-			const bufferImage = await sticker.get();
-			conn.sendMessage(senderNumber, bufferImage, MessageType.sticker, {
-				quoted: message
-			});
+			// const sticker = new WSF.Sticker(outputPath, {
+			// 	crop: false,
+			// 	pack: "sticker",
+			// 	author: stickerParameter
+			// });
+			// await sticker.build();
+			// const bufferImage = await sticker.get();
+			// conn.sendMessage(senderNumber, bufferImage, MessageType.sticker, {
+			// 	quoted: message
+			// });
 
-			fs.unlinkSync(imagePath)
-			fs.unlinkSync(outputPath);
-			break;
+			// fs.unlinkSync(imagePath)
+			// fs.unlinkSync(outputPath);
+			// break;
 		}
 
 		case `bplanet`: {
