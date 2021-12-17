@@ -643,6 +643,7 @@ module.exports = async (conn, message) => {
 			// fs.unlinkSync(imagePath)
 			// fs.unlinkSync(outputPath);
 			// break;
+			break;
 		}
 
 		case `bplanet`: {
@@ -722,16 +723,11 @@ module.exports = async (conn, message) => {
 			const url = 'https://www.yt-download.org/api/button/mp3/';
 			if (ytregex.test(parameter)) {
 
-				conn.sendMessage(senderNumber, "Tunggu sebentar ya :3", MessageType.text, {
-					quoted: message
-				});
-
 				var match = parameter.match(ytregex);
 				var result = (match && match[7].length == 11) ? match[7] : false;
 				var links = url + result;
 
 				if (ytregex.test(parameter)) {
-
 					conn.sendMessage(senderNumber, "Tunggu sebentar ya :3", MessageType.text, {
 						quoted: message
 					});

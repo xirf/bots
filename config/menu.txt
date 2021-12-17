@@ -12,7 +12,6 @@ Jika kamu memiliki saran fitur langsung chat ke Facebook ya!
 ╔═[ EDUKASI ]
 ║
 ╠ *!kbbi kata*
-╠ *~!wikipedia~* (bug)
 ╠ *brainly soal*
 ╚════════
 
@@ -29,14 +28,11 @@ Jika kamu memiliki saran fitur langsung chat ke Facebook ya!
 ╔═ [ MEDIA ]
 ║   ╚ Reply stikernya ya
 ╠ *!sticker caption*
-╠ *~!stickernobg caption~* (bug)
 ╠ *!gifsticker caption*
-╠ *~!textsticker caption~* (bug)
 ╠ *!toimg*
 ║   ╚ Sticker ke gambar
 ╠ *!togif*
 ║   ╚ Sticker ke Gif
-╠ *!write teks*
 ╚════════
 
 ╔═ [ TEXT ]
