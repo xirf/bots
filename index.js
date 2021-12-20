@@ -11,14 +11,14 @@
  *
  */
 
-const fs                     = require("fs");
-const http                   = require("http");
-const axios                  = require("axios");
-const qrcode                 = require("qrcode");
-const messageHandler         = require("./messageHandler.js");
-const { WAConnection }       = require("@adiwajshing/baileys");
-const conn                   = new WAConnection();
-      conn.maxCachedMessages = 15;
+const fs = require("fs");
+const http = require("http");
+const axios = require("axios");
+const qrcode = require("qrcode");
+const messageHandler = require("./messageHandler.js");
+const { WAConnection } = require("@adiwajshing/baileys");
+const conn = new WAConnection();
+conn.maxCachedMessages = 15;
 
 const server = http.createServer((req, res) => {
 	if (req.url == "/") {
@@ -51,16 +51,21 @@ conn.on("chat-update", async (message) => {
 		if (message.message.ephemeralMessage) {
 			message.message = message.message.ephemeralMessage.message;
 		}
-		
-		await messageHandler(conn, message);
-	} catch(e) {
+
+		if (!message.participant && !stickerMessage) {
+			conn.sendMessage( message.key.remoteJid, `Selamat datang di *${conn.user.name}* silahkan gunakan *!Help* untuk melihat menu yang ada`, MessageType.text, { quoted: message });
+		} else {
+			await messageHandler(conn, message);
+		}
+
+	} catch (e) {
 		console.log("[ERROR] " + e.message);
-		
+
 		let theError = ""
 
-		if(e.message == "Cannot read properties of undefined (reading 'Key')"){
+		if (e.message == "Cannot read properties of undefined (reading 'Key')") {
 			theError = "Perintah tidak ditemukan";
-		}else{
+		} else {
 			theError = e.message;
 		}
 
@@ -71,7 +76,7 @@ conn.on("chat-update", async (message) => {
 const start = async () => {
 
 	// ganti jika terus meminta kode QR
-	conn.version = [2,2142,12];
+	conn.version = [2, 2142, 12];
 
 	if (fs.existsSync("login.json")) conn.loadAuthInfo("login.json");
 	conn.connect()
